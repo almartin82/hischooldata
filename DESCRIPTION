@@ -1,0 +1,36 @@
+Package: hischooldata
+Title: Fetch and Process Hawaii School Data
+Version: 0.1.0
+Authors@R:
+    person("Al", "Martin", , "almartin@example.com", role = c("aut", "cre"))
+Description: Downloads and processes school data from the Hawaii Department
+    of Education (HIDOE). Provides functions for fetching enrollment data
+    from official HIDOE sources and transforming it into tidy format for
+    analysis. Hawaii is unique as the only U.S. state with a single
+    statewide school district.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
+Depends:
+    R (>= 4.0)
+Imports:
+    dplyr,
+    readxl,
+    readr,
+    purrr,
+    stringr,
+    tidyr,
+    rlang,
+    httr,
+    rappdirs
+Suggests:
+    testthat (>= 3.0.0),
+    knitr,
+    rmarkdown,
+    ggplot2,
+    scales
+VignetteBuilder: knitr
+Config/testthat/edition: 3
+URL: https://almartin82.github.io/hischooldata/, https://github.com/almartin82/hischooldata
+BugReports: https://github.com/almartin82/hischooldata/issues
