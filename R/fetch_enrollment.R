@@ -13,6 +13,8 @@
 #' Education (HIDOE).
 #'
 #' @param end_year School year end (2023-24 = 2024).
+#' @param tidy If TRUE (default), returns data in long (tidy) format with subgroup
+#'   column. If FALSE, returns wide format.
 #' @param use_cache If TRUE (default), uses locally cached data when available.
 #' @return Data frame with enrollment data
 #' @export
@@ -21,10 +23,13 @@
 #' # Get 2024 enrollment data
 #' enr_2024 <- fetch_enr(2024)
 #'
+#' # Get wide format
+#' enr_wide <- fetch_enr(2024, tidy = FALSE)
+#'
 #' # Force fresh download
 #' enr_fresh <- fetch_enr(2024, use_cache = FALSE)
 #' }
-fetch_enr <- function(end_year, use_cache = TRUE) {
+fetch_enr <- function(end_year, tidy = TRUE, use_cache = TRUE) {
 
   # Validate year
   available <- get_available_years()
@@ -71,6 +76,7 @@ fetch_enr <- function(end_year, use_cache = TRUE) {
 #' Downloads and combines enrollment data for multiple school years.
 #'
 #' @param end_years Vector of school year ends (e.g., c(2022, 2023, 2024))
+#' @param tidy If TRUE (default), returns data in long (tidy) format.
 #' @param use_cache If TRUE (default), uses locally cached data when available.
 #' @return Combined data frame with enrollment data for all requested years
 #' @export
@@ -79,7 +85,7 @@ fetch_enr <- function(end_year, use_cache = TRUE) {
 #' # Get 3 years of data
 #' enr_multi <- fetch_enr_multi(2022:2024)
 #' }
-fetch_enr_multi <- function(end_years, use_cache = TRUE) {
+fetch_enr_multi <- function(end_years, tidy = TRUE, use_cache = TRUE) {
 
   # Validate years
   available <- get_available_years()
@@ -94,7 +100,7 @@ fetch_enr_multi <- function(end_years, use_cache = TRUE) {
     end_years,
     function(yr) {
       message(paste("Fetching", yr, "..."))
-      fetch_enr(yr, use_cache = use_cache)
+      fetch_enr(yr, tidy = tidy, use_cache = use_cache)
     }
   )
 

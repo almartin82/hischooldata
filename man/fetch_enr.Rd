@@ -4,10 +4,13 @@
 \alias{fetch_enr}
 \title{Fetch Hawaii enrollment data}
 \usage{
-fetch_enr(end_year, use_cache = TRUE)
+fetch_enr(end_year, tidy = TRUE, use_cache = TRUE)
 }
 \arguments{
 \item{end_year}{School year end (2023-24 = 2024).}
+
+\item{tidy}{If TRUE (default), returns data in long (tidy) format with subgroup
+column. If FALSE, returns wide format.}
 
 \item{use_cache}{If TRUE (default), uses locally cached data when available.}
 }
@@ -22,6 +25,9 @@ Education (HIDOE).
 \dontrun{
 # Get 2024 enrollment data
 enr_2024 <- fetch_enr(2024)
+
+# Get wide format
+enr_wide <- fetch_enr(2024, tidy = FALSE)
 
 # Force fresh download
 enr_fresh <- fetch_enr(2024, use_cache = FALSE)
