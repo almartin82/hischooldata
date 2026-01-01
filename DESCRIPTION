@@ -1,13 +1,10 @@
 Package: hischooldata
-Title: Fetch and Process Hawaii School Data
+Title: Hawaii School Data
 Version: 0.1.0
 Authors@R:
     person("Al", "Martin", , "almartin@example.com", role = c("aut", "cre"))
-Description: Downloads and processes school data from the Hawaii Department
-    of Education (HIDOE). Provides functions for fetching enrollment data
-    from official HIDOE sources and transforming it into tidy format for
-    analysis. Hawaii is unique as the only U.S. state with a single
-    statewide school district.
+Description: A simple, consistent interface for accessing Hawaii
+    school data in R.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
