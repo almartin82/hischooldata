@@ -17,7 +17,7 @@ Hawaii data comes in different formats depending on the year:
 \itemize{
 \item Era 1 (2018+): Modern HIDOE Excel format
 \item Era 2 (2010-2017): DBEDT Data Book format
-\item Era 3 (pre-2010): Historical DBEDT/NCES format
+\item Era 3 (pre-2010): Historical DBEDT format
 }
 }
 \keyword{internal}

@@ -2,19 +2,7 @@
 # Utility Functions
 # ==============================================================================
 
-#' Pipe operator
-#'
-#' See \code{dplyr::\link[dplyr:reexports]{\%>\%}} for details.
-#'
-#' @name %>%
-#' @rdname pipe
-#' @keywords internal
-#' @export
-#' @importFrom dplyr %>%
-#' @usage lhs \%>\% rhs
-#' @param lhs A value or the magrittr placeholder.
-#' @param rhs A function call using the magrittr semantics.
-#' @return The result of calling `rhs(lhs)`.
+#' @importFrom rlang .data
 NULL
 
 
@@ -81,7 +69,7 @@ get_complex_area <- function(school_code) {
 #' Hawaii data comes in different formats depending on the year:
 #' - Era 1 (2018+): Modern HIDOE Excel format
 #' - Era 2 (2010-2017): DBEDT Data Book format
-#' - Era 3 (pre-2010): Historical DBEDT/NCES format
+#' - Era 3 (pre-2010): Historical DBEDT format
 #'
 #' @param end_year School year end
 #' @return Character string indicating format era
@@ -94,4 +82,27 @@ detect_format_era <- function(end_year) {
   } else {
     return("dbedt_historical")
   }
+}
+
+
+#' Get available years for Hawaii enrollment data
+#'
+#' Returns the range of years for which enrollment data can be fetched
+#' from the Hawaii Department of Education.
+#'
+#' @return A list with components:
+#'   \describe{
+#'     \item{min_year}{Earliest available year (2010)}
+#'     \item{max_year}{Most recent available year (2025)}
+#'     \item{description}{Human-readable description of the date range}
+#'   }
+#' @export
+#' @examples
+#' get_available_years()
+get_available_years <- function() {
+  list(
+    min_year = 2010,
+    max_year = 2025,
+    description = "Hawaii enrollment data is available from 2010 to 2025"
+  )
 }
