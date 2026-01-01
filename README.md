@@ -2,12 +2,13 @@
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/almartin82/hischooldata/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/almartin82/hischooldata/actions/workflows/R-CMD-check.yaml)
+[![Python Tests](https://github.com/almartin82/hischooldata/actions/workflows/python-test.yaml/badge.svg)](https://github.com/almartin82/hischooldata/actions/workflows/python-test.yaml)
 [![pkgdown](https://github.com/almartin82/hischooldata/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/almartin82/hischooldata/actions/workflows/pkgdown.yaml)
 <!-- badges: end -->
 
 **[Documentation](https://almartin82.github.io/hischooldata/)** | **[Getting Started](https://almartin82.github.io/hischooldata/articles/quickstart.html)**
 
-Fetch and analyze Hawaii public school enrollment data from the Hawaii Department of Education (HIDOE).
+Fetch and analyze Hawaii school enrollment data from the Hawaii Department of Education (HIDOE) in R or Python.
 
 ## What can you find with hischooldata?
 
@@ -178,6 +179,8 @@ remotes::install_github("almartin82/hischooldata")
 
 ## Quick start
 
+### R
+
 ```r
 library(hischooldata)
 library(dplyr)
@@ -204,6 +207,42 @@ enr_2024 %>%
   filter(subgroup == "total_enrollment", grade_level == "TOTAL") %>%
   arrange(desc(n_students)) %>%
   select(school_name, complex_area, n_students)
+```
+
+### Python
+
+```python
+import pyhischooldata as hi
+
+# Fetch one year
+enr_2024 = hi.fetch_enr(2024)
+
+# Fetch multiple years
+enr_recent = hi.fetch_enr_multi([2020, 2021, 2022, 2023, 2024])
+
+# Statewide totals
+enr_2024[
+    (enr_2024['is_state'] == True) &
+    (enr_2024['subgroup'] == 'total_enrollment') &
+    (enr_2024['grade_level'] == 'TOTAL')
+]
+
+# Complex Area breakdown
+(enr_2024[
+    (enr_2024['grade_level'] == 'TOTAL') &
+    (enr_2024['subgroup'] == 'total_enrollment')
+]
+.groupby('complex_area')['n_students']
+.sum()
+.sort_values(ascending=False))
+
+# School-level detail
+(enr_2024[
+    (enr_2024['subgroup'] == 'total_enrollment') &
+    (enr_2024['grade_level'] == 'TOTAL')
+]
+.sort_values('n_students', ascending=False)
+[['school_name', 'complex_area', 'n_students']])
 ```
 
 ## Data availability
