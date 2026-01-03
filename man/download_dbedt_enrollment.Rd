@@ -2,18 +2,29 @@
 % Please edit documentation in R/get_raw_enrollment.R
 \name{download_dbedt_enrollment}
 \alias{download_dbedt_enrollment}
-\title{Download DBEDT State Data Book enrollment data (2010-2017)}
+\title{Download DBEDT State Data Book enrollment data}
 \usage{
 download_dbedt_enrollment(end_year)
 }
 \arguments{
-\item{end_year}{School year end (2010-2017)}
+\item{end_year}{School year end}
 }
 \value{
 Data frame with enrollment data
 }
 \description{
 Downloads enrollment data from the Hawaii DBEDT State Data Book.
-Files are Excel tables with state-level and county-level enrollment.
+Files are Excel tables with state-level and county-level enrollment by grade.
+}
+\details{
+Table numbers changed over time:
+\itemize{
+\item 2010-2015: Table 3.12 has enrollment by grade and county
+\item 2016+: Table 3.13 has enrollment by grade and county
+}
+
+Important: The Data Book publication year is typically one year behind the
+school year end. For example, the 2023 Data Book contains 2023-24 school
+year data (end_year=2024). Use get_databook_year() to map correctly.
 }
 \keyword{internal}

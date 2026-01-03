@@ -1,0 +1,198 @@
+---
+title: "Introduction to hischooldata"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to hischooldata}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = FALSE
+)
+```
+
+## Overview
+
+The `hischooldata` package provides a simple interface for accessing Hawaii
+public school enrollment data from the Hawaii Department of Education (HIDOE)
+and the Hawaii State Department of Business, Economic Development & Tourism
+(DBEDT) State Data Book.
+
+## Hawaii's Unique School Structure
+
+Unlike all other U.S. states, **Hawaii has a single statewide school district**.
+The Hawaii Department of Education operates all public schools across the entire
+state, organized into four counties:
+
+- **Honolulu** (Oahu) - approximately 62% of total enrollment
+- **Hawaii County** (Big Island) - approximately 13% of enrollment
+- **Maui** (includes Molokai and Lanai) - approximately 11% of enrollment
+- **Kauai** - approximately 5% of enrollment
+- **Charter Schools** - approximately 8% of enrollment (statewide)
+
+This single-district structure means the data is naturally organized at the
+county level rather than the school district level found in other states.
+
+## Installation
+
+```{r eval=FALSE}
+# Install from GitHub
+# install.packages("devtools")
+devtools::install_github("almartin82/hischooldata")
+```
+
+## Basic Usage
+
+### Fetching Enrollment Data
+
+The main function is `fetch_enr()`, which downloads enrollment data for a
+specific school year:
+```{r}
+library(hischooldata)
+
+# Get 2024 enrollment data (2023-24 school year)
+enr_2024 <- fetch_enr(2024)
+head(enr_2024)
+```
+
+### Understanding the end_year Parameter
+
+The `end_year` parameter represents the **END** of the school year:
+
+- `end_year = 2024` means the 2023-24 school year (ending June 2024)
+- `end_year = 2025` means the 2024-25 school year (ending June 2025)
+
+This convention is consistent with other state schooldata packages.
+
+### Available Years
+
+Use `get_available_years()` to see what years are available:
+
+```{r}
+get_available_years()
+```
+
+**Note**: School year 2011-12 (end_year = 2012) is not available because the
+2011 DBEDT State Data Book was not published.
+
+### Data Structure
+
+The returned data frame includes:
+
+| Column | Description |
+|--------|-------------|
+| `end_year` | School year end (e.g., 2024 for 2023-24) |
+| `agg_level` | Aggregation level: STATE, COUNTY, or CHARTER |
+| `county_name` | Geographic area name |
+| `grade` | Grade level (PK, K, 01-12, SPED, or TOTAL) |
+| `enrollment` | Number of students enrolled |
+
+### Example: County-Level Analysis
+
+```{r}
+library(dplyr)
+library(ggplot2)
+
+# Get recent years
+enr_multi <- fetch_enr_multi(2020:2024)
+
+# Calculate county totals over time
+county_trends <- enr_multi |>
+  filter(agg_level == "COUNTY", grade == "TOTAL") |>
+  select(end_year, county_name, enrollment)
+
+# Plot trends
+ggplot(county_trends, aes(x = end_year, y = enrollment, color = county_name)) +
+  geom_line(linewidth = 1) +
+  geom_point() +
+  labs(
+    title = "Hawaii Public School Enrollment by County",
+    x = "School Year End",
+    y = "Total Enrollment",
+    color = "County"
+  ) +
+  scale_y_continuous(labels = scales::comma) +
+  theme_minimal()
+```
+
+### Example: Grade-Level Analysis
+
+```{r}
+# Get state-level enrollment by grade
+enr_2024 <- fetch_enr(2024)
+state_grades <- enr_2024 |>
+  filter(county_name == "State Total", grade != "TOTAL") |>
+  mutate(grade = factor(grade, levels = c("PK", "K", sprintf("%02d", 1:12), "SPED")))
+
+# Plot grade distribution
+ggplot(state_grades, aes(x = grade, y = enrollment)) +
+  geom_col(fill = "steelblue") +
+  labs(
+    title = "Hawaii Public School Enrollment by Grade (2023-24)",
+    x = "Grade Level",
+    y = "Enrollment"
+  ) +
+  scale_y_continuous(labels = scales::comma) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+## Caching
+
+The package caches downloaded data locally to avoid repeated downloads:
+
+```{r}
+# Check cache status
+cache_status()
+
+# Clear cache for a specific year
+clear_cache(2024)
+
+# Clear all cached data
+clear_cache()
+```
+
+## Data Sources
+
+The package fetches data from:
+
+1. **DBEDT State Data Book** (primary source): Tables 3.12 and 3.13
+   - URL: https://files.hawaii.gov/dbedt/economic/databook/
+   - Contains county-level enrollment by grade
+
+2. **HIDOE Official Enrollment** (fallback for recent years):
+   - URL: https://www.hawaiipublicschools.org/
+   - Contains school-level detail (when available)
+
+## Known Data Limitations
+
+1. **No 2011-12 Data**: The 2011 DBEDT Data Book was not published, so
+   end_year = 2012 is not available.
+
+2. **SPED Data**: Special Education enrollment is shown separately in most years
+   but is suppressed in the 2024-25 data (per the 2024 Data Book footnote).
+
+3. **Multi-Year Tables**: The 2021 Data Book contains both 2020-21 and 2021-22
+   school year data. The package handles extraction of the correct year.
+
+4. **COVID Impact**: Both the 2019 and 2020 Data Books contain 2019-20 school
+   year data (the 2020 Data Book is a duplicate due to COVID disruptions).
+
+## Python Interface
+
+A Python package is also available for accessing the same data:
+
+```python
+# pip install hischooldata
+
+from hischooldata import fetch_enr
+
+df = fetch_enr(2024)
+print(df.head())
+```
+
+See the `pyhischooldata/` directory for the Python implementation.
