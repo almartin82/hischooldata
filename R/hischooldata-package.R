@@ -1,21 +1,20 @@
 #' hischooldata: Fetch and Process Hawaii School Data
 #'
 #' Downloads and processes school data from the Hawaii Department of Education
-#' (HIDOE). Provides functions for fetching enrollment data and transforming
-#' it into tidy format for analysis.
+#' (HIDOE) via the DBEDT State Data Book. Provides functions for fetching
+#' enrollment data in tidy format for analysis.
 #'
 #' @section Hawaii's Unique Structure:
 #' Hawaii is the only U.S. state with a single statewide school district.
 #' The Hawaii Department of Education (HIDOE) operates all public schools
-#' directly, organized into 15 Complex Areas (geographic clusters of schools).
+#' directly. Data is organized by county (Honolulu, Hawaii County, Maui,
+#' Kauai) and Charter Schools.
 #'
 #' @section Main functions:
 #' \describe{
 #'   \item{\code{\link{fetch_enr}}}{Fetch enrollment data for a school year}
 #'   \item{\code{\link{fetch_enr_multi}}}{Fetch enrollment data for multiple years}
-#'   \item{\code{\link{tidy_enr}}}{Transform wide data to tidy (long) format}
-#'   \item{\code{\link{id_enr_aggs}}}{Add aggregation level flags}
-#'   \item{\code{\link{enr_grade_aggs}}}{Create grade-level aggregations}
+#'   \item{\code{\link{get_available_years}}}{List available school years}
 #' }
 #'
 #' @section Cache functions:
@@ -24,29 +23,18 @@
 #'   \item{\code{\link{clear_cache}}}{Remove cached data files}
 #' }
 #'
-#' @section ID System:
-#' Hawaii uses a school-based system with state school codes:
+#' @section end_year Convention:
+#' The end_year parameter represents the END of the school year:
 #' \itemize{
-#'   \item District ID: Always "001" (single statewide district)
-#'   \item Campus/School IDs: 3-digit codes assigned by HIDOE
-#'   \item Complex Areas: 15 geographic groupings of schools
-#' }
-#'
-#' @section Demographics:
-#' Hawaii has unique demographics compared to mainland states:
-#' \itemize{
-#'   \item Majority Asian and Pacific Islander population
-#'   \item Native Hawaiian is a significant demographic category
-#'   \item Part-Hawaiian is tracked separately from Native Hawaiian
-#'   \item Filipino is the largest single ethnic group in many schools
+#'   \item end_year = 2024 means the 2023-24 school year
+#'   \item end_year = 2025 means the 2024-25 school year
 #' }
 #'
 #' @section Data Sources:
-#' Data is sourced from the Hawaii Department of Education:
+#' Data is sourced from the DBEDT State Data Book:
 #' \itemize{
+#'   \item DBEDT Data Book: \url{https://files.hawaii.gov/dbedt/economic/databook/}
 #'   \item HIDOE: \url{https://www.hawaiipublicschools.org/}
-#'   \item School Reports: \url{https://hawaiipublicschools.org/data-reports/school-reports/}
-#'   \item ARCH: \url{https://arch.k12.hi.us/}
 #' }
 #'
 #' @docType package

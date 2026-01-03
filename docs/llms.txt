@@ -1,0 +1,332 @@
+# hischooldata
+
+**[Documentation](https://almartin82.github.io/hischooldata/)** \|
+**[Getting
+Started](https://almartin82.github.io/hischooldata/articles/quickstart.html)**
+
+Fetch and analyze Hawaii school enrollment data from the Hawaii
+Department of Education (HIDOE) in R or Python.
+
+## What can you find with hischooldata?
+
+**15 years of enrollment data (2010-2025).** 180,000 students today. One
+statewide district. Here are ten stories hiding in the numbers:
+
+------------------------------------------------------------------------
+
+### 1. Hawaii is America’s only statewide school district
+
+Unlike every other state, Hawaii operates as a single statewide school
+district with approximately 290 schools. No local school boards, no
+property tax funding. One state, one system.
+
+``` r
+library(hischooldata)
+library(dplyr)
+
+enr_2024 <- fetch_enr(2024)
+
+enr_2024 %>%
+  filter(is_state, grade_level == "TOTAL", subgroup == "total_enrollment") %>%
+  select(n_students)
+```
+
+------------------------------------------------------------------------
+
+### 2. Enrollment has been declining for a decade
+
+Hawaii lost 15,000 students since 2015. High housing costs push families
+to the mainland, and birth rates are falling.
+
+``` r
+enr <- fetch_enr_multi(2015:2024)
+
+enr %>%
+  filter(is_state, grade_level == "TOTAL", subgroup == "total_enrollment") %>%
+  select(end_year, n_students)
+```
+
+![Enrollment decline](reference/figures/enrollment-decline.png)
+
+Enrollment decline
+
+------------------------------------------------------------------------
+
+### 3. The most diverse state in America
+
+Hawaii has no racial majority. Filipino, Native Hawaiian, White, and
+Japanese students each comprise significant portions of enrollment. This
+is true diversity.
+
+``` r
+enr_2024 %>%
+  filter(is_state, grade_level == "TOTAL",
+         subgroup %in% c("asian", "hawaiian", "white", "hispanic", "multiracial")) %>%
+  select(subgroup, n_students, pct) %>%
+  arrange(desc(n_students))
+```
+
+![Racial diversity](reference/figures/diversity.png)
+
+Racial diversity
+
+------------------------------------------------------------------------
+
+### 4. COVID hit Oahu hardest
+
+When the pandemic struck, families on Oahu fled to the mainland or
+shifted to private schools. Neighbor island schools were more resilient.
+
+``` r
+enr %>%
+  filter(end_year %in% c(2020, 2021), grade_level == "TOTAL",
+         subgroup == "total_enrollment") %>%
+  group_by(complex_area, end_year) %>%
+  summarize(n = sum(n_students, na.rm = TRUE)) %>%
+  tidyr::pivot_wider(names_from = end_year, values_from = n) %>%
+  mutate(change_pct = (`2021` - `2020`) / `2020` * 100)
+```
+
+------------------------------------------------------------------------
+
+### 5. Kindergarten is shrinking faster than high school
+
+Hawaii’s kindergarten enrollment dropped 20% since 2015. The pipeline of
+students entering the system is narrowing.
+
+``` r
+enr %>%
+  filter(is_state, subgroup == "total_enrollment",
+         grade_level %in% c("K", "09", "12")) %>%
+  select(end_year, grade_level, n_students) %>%
+  tidyr::pivot_wider(names_from = grade_level, values_from = n_students)
+```
+
+![K vs high school](reference/figures/k-vs-12.png)
+
+K vs high school
+
+------------------------------------------------------------------------
+
+### 6. Private school competition is fierce
+
+Hawaii has one of the highest private school enrollment rates in the
+nation. Kamehameha Schools, Punahou, and Iolani draw thousands of
+students who might otherwise attend public schools.
+
+``` r
+# Public enrollment as context
+enr_2024 %>%
+  filter(is_state, grade_level == "TOTAL", subgroup == "total_enrollment") %>%
+  pull(n_students)
+# Compare to ~35,000 private school students statewide
+```
+
+------------------------------------------------------------------------
+
+### 7. The Complex Area system creates mini-districts
+
+Hawaii organizes its 290 schools into 15 Complex Areas, each centered
+around a high school. Some Complex Areas serve more students than entire
+rural districts on the mainland.
+
+``` r
+enr_2024 %>%
+  filter(grade_level == "TOTAL", subgroup == "total_enrollment") %>%
+  group_by(complex_area) %>%
+  summarize(students = sum(n_students, na.rm = TRUE)) %>%
+  arrange(desc(students))
+```
+
+------------------------------------------------------------------------
+
+### 8. Neighbor islands are holding steady
+
+While Oahu loses students, Maui, Big Island, and Kauai schools have
+remained more stable. Rural Hawaii is not emptying out like rural
+mainland states.
+
+``` r
+enr %>%
+  filter(grade_level == "TOTAL", subgroup == "total_enrollment") %>%
+  mutate(island = case_when(
+    grepl("Maui|Molokai|Lanai", complex_area) ~ "Maui County",
+    grepl("Hawaii|Kona|Kohala|Hilo", complex_area) ~ "Big Island",
+    grepl("Kauai", complex_area) ~ "Kauai",
+    TRUE ~ "Oahu"
+  )) %>%
+  group_by(end_year, island) %>%
+  summarize(n = sum(n_students, na.rm = TRUE))
+```
+
+![Island comparison](reference/figures/islands.png)
+
+Island comparison
+
+------------------------------------------------------------------------
+
+### 9. Special education serves 1 in 10 students
+
+Hawaii provides special education services to over 18,000 students,
+reflecting strong identification and service systems.
+
+``` r
+enr_2024 %>%
+  filter(is_state, grade_level == "TOTAL", subgroup == "special_ed") %>%
+  select(n_students, pct)
+```
+
+------------------------------------------------------------------------
+
+### 10. English Learners reflect immigration patterns
+
+Hawaii’s English Learner population includes students from the
+Philippines, Micronesia, and Japan, reflecting the state’s unique
+Pacific location.
+
+``` r
+enr %>%
+  filter(is_state, grade_level == "TOTAL", subgroup == "lep") %>%
+  select(end_year, n_students, pct)
+```
+
+------------------------------------------------------------------------
+
+## Installation
+
+``` r
+# install.packages("remotes")
+remotes::install_github("almartin82/hischooldata")
+```
+
+## Quick start
+
+### R
+
+``` r
+library(hischooldata)
+library(dplyr)
+
+# Fetch one year
+enr_2024 <- fetch_enr(2024)
+
+# Fetch multiple years
+enr_recent <- fetch_enr_multi(2020:2024)
+
+# Statewide totals
+enr_2024 %>%
+  filter(is_state, subgroup == "total_enrollment", grade_level == "TOTAL")
+
+# Complex Area breakdown
+enr_2024 %>%
+  filter(grade_level == "TOTAL", subgroup == "total_enrollment") %>%
+  group_by(complex_area) %>%
+  summarize(students = sum(n_students, na.rm = TRUE)) %>%
+  arrange(desc(students))
+
+# School-level detail
+enr_2024 %>%
+  filter(subgroup == "total_enrollment", grade_level == "TOTAL") %>%
+  arrange(desc(n_students)) %>%
+  select(school_name, complex_area, n_students)
+```
+
+### Python
+
+``` python
+import pyhischooldata as hi
+
+# Fetch one year
+enr_2024 = hi.fetch_enr(2024)
+
+# Fetch multiple years
+enr_recent = hi.fetch_enr_multi([2020, 2021, 2022, 2023, 2024])
+
+# Statewide totals
+enr_2024[
+    (enr_2024['is_state'] == True) &
+    (enr_2024['subgroup'] == 'total_enrollment') &
+    (enr_2024['grade_level'] == 'TOTAL')
+]
+
+# Complex Area breakdown
+(enr_2024[
+    (enr_2024['grade_level'] == 'TOTAL') &
+    (enr_2024['subgroup'] == 'total_enrollment')
+]
+.groupby('complex_area')['n_students']
+.sum()
+.sort_values(ascending=False))
+
+# School-level detail
+(enr_2024[
+    (enr_2024['subgroup'] == 'total_enrollment') &
+    (enr_2024['grade_level'] == 'TOTAL')
+]
+.sort_values('n_students', ascending=False)
+[['school_name', 'complex_area', 'n_students']])
+```
+
+## Data availability
+
+| Years         | Source                    | Aggregation Levels          | Demographics                      | Notes                         |
+|---------------|---------------------------|-----------------------------|-----------------------------------|-------------------------------|
+| **2018-2025** | HIDOE Official Enrollment | State, Complex Area, School | Race, Gender, Special Populations | Modern Excel format           |
+| **2010-2017** | DBEDT State Data Book     | State, County               | Race                              | Aggregate data from Data Book |
+
+### What’s available
+
+- **Levels:** State, Complex Area (15), and School (~290)
+- **Demographics:** Filipino, Native Hawaiian, White, Japanese, Pacific
+  Islander, Mixed, and others
+- **Special populations:** English Learners (LEP), Special Education
+- **Grade levels:** Pre-K through Grade 12
+
+### Unique characteristics
+
+- **Single statewide district:** Hawaii has no local school districts
+- **Complex Areas:** 15 geographic clusters centered around high schools
+- **Pacific Islander detail:** More granular Pacific Islander categories
+  than mainland states
+- **Mixed race:** High rates of multiracial students (30%+)
+
+## Data source
+
+Hawaii Department of Education: [HIDOE
+Data](https://www.hawaiipublicschools.org/) \| [DBEDT Data
+Book](https://files.hawaii.gov/dbedt/economic/databook/)
+
+## Part of the State Schooldata Project
+
+A simple, consistent interface for accessing state-published school data
+in Python and R.
+
+**All 50 state packages:**
+[github.com/almartin82](https://github.com/almartin82?tab=repositories&q=schooldata)
+
+## Author
+
+[Andy Martin](https://github.com/almartin82) (<almartin@gmail.com>)
+
+## License
+
+MIT
+
+# Package index
+
+## Fetch Data
+
+- [`fetch_enr()`](https://almartin82.github.io/hischooldata/reference/fetch_enr.md)
+  : Fetch Hawaii enrollment data
+- [`fetch_enr_multi()`](https://almartin82.github.io/hischooldata/reference/fetch_enr_multi.md)
+  : Fetch enrollment data for multiple years
+- [`get_available_years()`](https://almartin82.github.io/hischooldata/reference/get_available_years.md)
+  : Get available years for Hawaii enrollment data
+
+## Cache Management
+
+- [`cache_status()`](https://almartin82.github.io/hischooldata/reference/cache_status.md)
+  : Show cache status
+- [`clear_cache()`](https://almartin82.github.io/hischooldata/reference/clear_cache.md)
+  : Clear the hischooldata cache
+
