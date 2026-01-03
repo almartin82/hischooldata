@@ -33,9 +33,9 @@ get_available_years()
 #> [1] 2010
 #> 
 #> $max_year
-#> [1] 2025
+#> [1] 2024
 #> 
 #> $description
-#> [1] "Hawaii enrollment data is available from 2010 to 2025"
+#> [1] "Hawaii enrollment data is available from 2010 to 2024"
 #> 
 ```
