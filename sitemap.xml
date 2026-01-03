@@ -4,6 +4,8 @@
 <url><loc>https://almartin82.github.io/hischooldata/DEVELOPMENT.html</loc></url>
 <url><loc>https://almartin82.github.io/hischooldata/LICENSE-text.html</loc></url>
 <url><loc>https://almartin82.github.io/hischooldata/LICENSE.html</loc></url>
+<url><loc>https://almartin82.github.io/hischooldata/articles/hischooldata.html</loc></url>
+<url><loc>https://almartin82.github.io/hischooldata/articles/index.html</loc></url>
 <url><loc>https://almartin82.github.io/hischooldata/authors.html</loc></url>
 <url><loc>https://almartin82.github.io/hischooldata/index.html</loc></url>
 <url><loc>https://almartin82.github.io/hischooldata/reference/cache_exists.html</loc></url>
@@ -19,6 +21,7 @@
 <url><loc>https://almartin82.github.io/hischooldata/reference/get_cache_dir.html</loc></url>
 <url><loc>https://almartin82.github.io/hischooldata/reference/get_cache_path.html</loc></url>
 <url><loc>https://almartin82.github.io/hischooldata/reference/get_complex_area.html</loc></url>
+<url><loc>https://almartin82.github.io/hischooldata/reference/get_databook_year.html</loc></url>
 <url><loc>https://almartin82.github.io/hischooldata/reference/get_hidoe_url.html</loc></url>
 <url><loc>https://almartin82.github.io/hischooldata/reference/get_raw_enr.html</loc></url>
 <url><loc>https://almartin82.github.io/hischooldata/reference/hischooldata-package.html</loc></url>
