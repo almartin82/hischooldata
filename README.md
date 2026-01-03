@@ -46,6 +46,8 @@ enr %>%
   select(end_year, n_students)
 ```
 
+![Enrollment decline](man/figures/enrollment-decline.png)
+
 ---
 
 ### 3. The most diverse state in America
@@ -59,6 +61,8 @@ enr_2024 %>%
   select(subgroup, n_students, pct) %>%
   arrange(desc(n_students))
 ```
+
+![Racial diversity](man/figures/diversity.png)
 
 ---
 
@@ -89,6 +93,8 @@ enr %>%
   select(end_year, grade_level, n_students) %>%
   tidyr::pivot_wider(names_from = grade_level, values_from = n_students)
 ```
+
+![K vs high school](man/figures/k-vs-12.png)
 
 ---
 
@@ -136,6 +142,8 @@ enr %>%
   group_by(end_year, island) %>%
   summarize(n = sum(n_students, na.rm = TRUE))
 ```
+
+![Island comparison](man/figures/islands.png)
 
 ---
 
