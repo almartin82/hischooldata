@@ -7,7 +7,7 @@
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
-**[Documentation](https://almartin82.github.io/hischooldata/)** | **[Getting Started](https://almartin82.github.io/hischooldata/articles/quickstart.html)**
+**[Documentation](https://almartin82.github.io/hischooldata/)** | **[Getting Started](https://almartin82.github.io/hischooldata/articles/quickstart.html)** | **[Enrollment Trends](https://almartin82.github.io/hischooldata/articles/enrollment-trends.html)**
 
 Fetch and analyze Hawaii school enrollment data from the Hawaii Department of Education (HIDOE) in R or Python.
 
@@ -46,7 +46,7 @@ enr %>%
   select(end_year, n_students)
 ```
 
-![Enrollment decline](man/figures/enrollment-decline.png)
+See [Enrollment Trends vignette](https://almartin82.github.io/hischooldata/articles/enrollment-trends.html#enrollment-has-been-declining-for-a-decade) for visualization.
 
 ---
 
@@ -62,7 +62,7 @@ enr_2024 %>%
   arrange(desc(n_students))
 ```
 
-![Racial diversity](man/figures/diversity.png)
+See [Enrollment Trends vignette](https://almartin82.github.io/hischooldata/articles/enrollment-trends.html#the-most-diverse-state-in-america) for visualization.
 
 ---
 
@@ -94,7 +94,7 @@ enr %>%
   tidyr::pivot_wider(names_from = grade_level, values_from = n_students)
 ```
 
-![K vs high school](man/figures/k-vs-12.png)
+See [Enrollment Trends vignette](https://almartin82.github.io/hischooldata/articles/enrollment-trends.html#kindergarten-is-shrinking-faster-than-high-school) for visualization.
 
 ---
 
@@ -143,7 +143,7 @@ enr %>%
   summarize(n = sum(n_students, na.rm = TRUE))
 ```
 
-![Island comparison](man/figures/islands.png)
+See [Enrollment Trends vignette](https://almartin82.github.io/hischooldata/articles/enrollment-trends.html#neighbor-islands-are-holding-steady) for visualization.
 
 ---
 

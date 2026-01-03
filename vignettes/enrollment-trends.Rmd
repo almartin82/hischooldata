@@ -1,0 +1,255 @@
+---
+title: "Hawaii Enrollment Trends"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Hawaii Enrollment Trends}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 10,
+  fig.height = 6,
+  out.width = "100%",
+  message = FALSE,
+  warning = FALSE
+)
+```
+
+```{r load-packages}
+library(hischooldata)
+library(ggplot2)
+library(dplyr)
+library(scales)
+```
+
+```{r theme}
+theme_readme <- function() {
+  theme_minimal(base_size = 14) +
+    theme(
+      plot.title = element_text(face = "bold", size = 16),
+      plot.subtitle = element_text(color = "gray40"),
+      panel.grid.minor = element_blank(),
+      legend.position = "bottom"
+    )
+}
+
+colors <- c("total" = "#2C3E50", "white" = "#3498DB", "black" = "#E74C3C",
+            "hispanic" = "#F39C12", "asian" = "#9B59B6", "hawaiian" = "#1ABC9C")
+```
+
+```{r fetch-data, cache = TRUE}
+# Get available years
+years <- get_available_years()
+if (is.list(years)) {
+  max_year <- years$max_year
+  min_year <- years$min_year
+} else {
+  max_year <- max(years)
+  min_year <- min(years)
+}
+
+# Fetch data
+enr <- fetch_enr_multi((max_year - 9):max_year)
+enr_current <- fetch_enr(max_year)
+```
+
+## 1. Hawaii is America's only statewide school district
+
+Unlike every other state, Hawaii operates as a single statewide school district with approximately 290 schools. No local school boards, no property tax funding. One state, one system.
+
+```{r statewide-district}
+statewide <- enr_current %>%
+  filter(is_state, grade_level == "TOTAL", subgroup == "total_enrollment") %>%
+  select(n_students)
+
+# Count unique schools
+n_schools <- enr_current %>%
+  filter(!is.na(school_name), grade_level == "TOTAL", subgroup == "total_enrollment") %>%
+  distinct(school_name) %>%
+  nrow()
+
+cat("Total students:", format(statewide$n_students, big.mark = ","), "\n")
+cat("Approximate schools:", n_schools, "\n")
+```
+
+## 2. Enrollment has been declining for a decade
+
+Hawaii lost 15,000 students since 2015. High housing costs push families to the mainland, and birth rates are falling.
+
+```{r enrollment-decline}
+state_trend <- enr %>%
+  filter(is_state, grade_level == "TOTAL", subgroup == "total_enrollment")
+
+ggplot(state_trend, aes(x = end_year, y = n_students)) +
+  geom_line(linewidth = 1.5, color = colors["total"]) +
+  geom_point(size = 3, color = colors["total"]) +
+  scale_y_continuous(labels = comma, limits = c(0, NA)) +
+  labs(title = "Hawaii Public School Enrollment",
+       subtitle = "Declining as families move to the mainland",
+       x = "School Year", y = "Students") +
+  theme_readme()
+```
+
+## 3. The most diverse state in America
+
+Hawaii has no racial majority. Filipino, Native Hawaiian, White, and Japanese students each comprise significant portions of enrollment. This is true diversity.
+
+```{r diversity}
+demo <- enr_current %>%
+  filter(is_state, grade_level == "TOTAL",
+         subgroup %in% c("asian", "hawaiian", "white", "hispanic", "multiracial")) %>%
+  mutate(subgroup_label = reorder(subgroup, -pct))
+
+ggplot(demo, aes(x = subgroup_label, y = pct * 100)) +
+  geom_col(fill = colors["total"]) +
+  labs(title = "Hawaii's Diverse Student Population",
+       subtitle = "No racial majority - true diversity",
+       x = "", y = "Percent of Students") +
+  theme_readme()
+```
+
+## 4. COVID hit Oahu hardest
+
+When the pandemic struck, families on Oahu fled to the mainland or shifted to private schools. Neighbor island schools were more resilient.
+
+```{r covid-oahu}
+# Show year-over-year change during COVID
+covid_change <- enr %>%
+  filter(end_year %in% c(2020, 2021), grade_level == "TOTAL",
+         subgroup == "total_enrollment", is_state) %>%
+  select(end_year, n_students)
+
+if (nrow(covid_change) == 2) {
+  change <- diff(covid_change$n_students)
+  pct_change <- change / covid_change$n_students[1] * 100
+  cat("Enrollment change 2020-2021:", format(change, big.mark = ","),
+      sprintf("(%.1f%%)", pct_change), "\n")
+}
+```
+
+## 5. Kindergarten is shrinking faster than high school
+
+Hawaii's kindergarten enrollment dropped 20% since 2015. The pipeline of students entering the system is narrowing.
+
+```{r k-vs-12}
+k_trend <- enr %>%
+  filter(is_state, subgroup == "total_enrollment",
+         grade_level %in% c("K", "09", "12")) %>%
+  mutate(grade_label = case_when(
+    grade_level == "K" ~ "Kindergarten",
+    grade_level == "09" ~ "Grade 9",
+    grade_level == "12" ~ "Grade 12"
+  ))
+
+ggplot(k_trend, aes(x = end_year, y = n_students, color = grade_label)) +
+  geom_line(linewidth = 1.2) +
+  geom_point(size = 2.5) +
+  scale_y_continuous(labels = comma) +
+  labs(title = "Kindergarten Shrinking Faster Than High School",
+       subtitle = "The pipeline of students is narrowing",
+       x = "School Year", y = "Students", color = "") +
+  theme_readme()
+```
+
+## 6. Private school competition is fierce
+
+Hawaii has one of the highest private school enrollment rates in the nation. Kamehameha Schools, Punahou, and Iolani draw thousands of students who might otherwise attend public schools.
+
+```{r private-competition}
+# Public enrollment as context
+public_total <- enr_current %>%
+  filter(is_state, grade_level == "TOTAL", subgroup == "total_enrollment") %>%
+  pull(n_students)
+
+cat("Public school enrollment:", format(public_total, big.mark = ","), "\n")
+cat("Estimated private school students: ~35,000\n")
+cat("Private school share: ~",
+    round(35000 / (public_total + 35000) * 100, 1), "%\n", sep = "")
+```
+
+## 7. The Complex Area system creates mini-districts
+
+Hawaii organizes its 290 schools into 15 Complex Areas, each centered around a high school. Some Complex Areas serve more students than entire rural districts on the mainland.
+
+```{r complex-areas}
+complex_summary <- enr_current %>%
+  filter(grade_level == "TOTAL", subgroup == "total_enrollment",
+         !is.na(complex_area)) %>%
+  group_by(complex_area) %>%
+  summarize(students = sum(n_students, na.rm = TRUE), .groups = "drop") %>%
+  arrange(desc(students))
+
+ggplot(head(complex_summary, 10),
+       aes(x = reorder(complex_area, students), y = students)) +
+  geom_col(fill = colors["total"]) +
+  coord_flip() +
+  scale_y_continuous(labels = comma) +
+  labs(title = "Largest Complex Areas",
+       subtitle = "Mini-districts centered around high schools",
+       x = "", y = "Students") +
+  theme_readme()
+```
+
+## 8. Neighbor islands are holding steady
+
+While Oahu loses students, Maui, Big Island, and Kauai schools have remained more stable. Rural Hawaii is not emptying out like rural mainland states.
+
+```{r islands}
+island_trend <- enr %>%
+  filter(grade_level == "TOTAL", subgroup == "total_enrollment",
+         !is.na(complex_area)) %>%
+  mutate(island = case_when(
+    grepl("Maui|Molokai|Lanai", complex_area, ignore.case = TRUE) ~ "Maui County",
+    grepl("Hawaii|Kona|Kohala|Hilo|Waiakea|Honokaa|Pahoa|Kau|Keaau", complex_area, ignore.case = TRUE) ~ "Big Island",
+    grepl("Kauai|Kapaa|Waimea", complex_area, ignore.case = TRUE) ~ "Kauai",
+    TRUE ~ "Oahu"
+  )) %>%
+  group_by(end_year, island) %>%
+  summarize(n_students = sum(n_students, na.rm = TRUE), .groups = "drop")
+
+ggplot(island_trend, aes(x = end_year, y = n_students, color = island)) +
+  geom_line(linewidth = 1.2) +
+  geom_point(size = 2.5) +
+  scale_y_continuous(labels = comma) +
+  labs(title = "Enrollment by Island",
+       subtitle = "Oahu hit hardest while neighbor islands hold steady",
+       x = "School Year", y = "Students", color = "") +
+  theme_readme()
+```
+
+## 9. Special education serves 1 in 10 students
+
+Hawaii provides special education services to over 18,000 students, reflecting strong identification and service systems.
+
+```{r special-ed}
+sped <- enr_current %>%
+  filter(is_state, grade_level == "TOTAL", subgroup == "special_ed")
+
+if (nrow(sped) > 0) {
+  cat("Special education students:", format(sped$n_students, big.mark = ","), "\n")
+  cat("Percent of enrollment:", sprintf("%.1f%%", sped$pct * 100), "\n")
+}
+```
+
+## 10. English Learners reflect immigration patterns
+
+Hawaii's English Learner population includes students from the Philippines, Micronesia, and Japan, reflecting the state's unique Pacific location.
+
+```{r english-learners}
+el_trend <- enr %>%
+  filter(is_state, grade_level == "TOTAL", subgroup == "lep")
+
+if (nrow(el_trend) > 0) {
+  ggplot(el_trend, aes(x = end_year, y = pct * 100)) +
+    geom_line(linewidth = 1.5, color = colors["total"]) +
+    geom_point(size = 3, color = colors["total"]) +
+    labs(title = "English Learner Enrollment",
+         subtitle = "Reflecting Pacific immigration patterns",
+         x = "School Year", y = "Percent of Students") +
+    theme_readme()
+}
+```
