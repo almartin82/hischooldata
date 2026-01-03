@@ -19,37 +19,48 @@
 #'
 #' Downloads school-level enrollment data from HIDOE's official sources.
 #' Uses different download methods based on year:
-#' - 2018+: HIDOE Excel enrollment files
-#' - 2010-2017: DBEDT State Data Book tables
-#' - Pre-2010: Historical DBEDT format
+#' - 2019+: HIDOE Excel enrollment files (falls back to DBEDT Data Book)
+#' - 2011-2018: DBEDT State Data Book tables
+#'
+#' The end_year parameter represents the END of the school year. For example,
+#' end_year=2024 requests 2023-24 school year data.
 #'
 #' @param end_year School year end (2023-24 = 2024)
 #' @return Data frame with school-level enrollment data
 #' @keywords internal
 get_raw_enr <- function(end_year) {
 
-  # Validate year - HIDOE data available from ~2010 to present
-  if (end_year < 2010 || end_year > 2025) {
-    stop("end_year must be between 2010 and 2025")
+  # Validate year against available years
+  available <- get_available_years()
+  if (!end_year %in% available$years) {
+    stop(paste0(
+      "end_year must be one of: ", paste(available$years, collapse = ", "),
+      "\nNote: end_year 2012 is not available (no 2011 Data Book published)"
+    ))
   }
 
   message(paste("Downloading Hawaii enrollment data for", end_year, "..."))
 
   # Determine format era and download accordingly
-  era <- detect_format_era(end_year)
+  # Note: detect_format_era uses Data Book year, which is end_year - 1
+  db_year <- get_databook_year(end_year)
+  era <- detect_format_era(db_year)
 
   if (era == "hidoe_modern") {
-    # Modern HIDOE Excel format (2018+)
+    # Modern HIDOE Excel format (db_year >= 2018, so end_year >= 2019)
+    # Note: HIDOE direct download often fails, so this falls back to DBEDT
     raw_data <- download_hidoe_enrollment(end_year)
   } else if (era == "dbedt_recent") {
-    # DBEDT Data Book format (2010-2017)
+    # DBEDT Data Book format (db_year 2010-2017, so end_year 2011-2018)
     raw_data <- download_dbedt_enrollment(end_year)
   } else {
     stop(paste("Data not available for year", end_year))
   }
 
-  # Add end_year column
-  raw_data$end_year <- end_year
+  # Ensure end_year column exists (may already be added by process_dbedt_tables)
+  if (!"end_year" %in% names(raw_data)) {
+    raw_data$end_year <- end_year
+  }
 
   raw_data
 }
@@ -139,66 +150,85 @@ download_hidoe_enrollment <- function(end_year) {
 }
 
 
-#' Download DBEDT State Data Book enrollment data (2010-2017)
+#' Download DBEDT State Data Book enrollment data
 #'
 #' Downloads enrollment data from the Hawaii DBEDT State Data Book.
-#' Files are Excel tables with state-level and county-level enrollment.
+#' Files are Excel tables with state-level and county-level enrollment by grade.
 #'
-#' @param end_year School year end (2010-2017)
+#' Table numbers changed over time:
+#' - 2010-2015: Table 3.12 has enrollment by grade and county
+#' - 2016+: Table 3.13 has enrollment by grade and county
+#'
+#' Important: The Data Book publication year is typically one year behind the
+#' school year end. For example, the 2023 Data Book contains 2023-24 school
+#' year data (end_year=2024). Use get_databook_year() to map correctly.
+#'
+#' @param end_year School year end
 #' @return Data frame with enrollment data
 #' @keywords internal
 download_dbedt_enrollment <- function(end_year) {
 
   message("  Downloading from DBEDT Data Book...")
 
-  # DBEDT Data Book tables use calendar year (publication year)
-  # For school year 2016-17 (end_year 2017), look at Data Book 2017 or 2018
-  db_year <- end_year
-
-  # Table 3.13 = Public School Enrollment by Grade and County
-  # Table 3.19 = Ethnicity of Public School Students
-  # URL pattern: https://files.hawaii.gov/dbedt/economic/databook/{YEAR}-individual/03/0313{YY}.xls
-
+  # Map end_year to the correct Data Book publication year
+  # e.g., end_year=2024 -> db_year=2023 (2023 Data Book has 2023-24 data)
+  db_year <- get_databook_year(end_year)
   yy <- substr(db_year, 3, 4)
 
-  # Try enrollment by grade table first
-  url_enrollment <- paste0(
-    "https://files.hawaii.gov/dbedt/economic/databook/",
-    db_year, "-individual/03/0313", yy, ".xls"
-  )
+  # Table numbers changed over time:
+  # - 2010-2015: Table 3.12 = Public School Enrollment by Grade and County
+  # - 2016+: Table 3.13 = Public School Enrollment by Grade and County
+  # We try both and use whichever has the expected "Grade" header
 
-  # Also try ethnicity table
+  tables_to_try <- c("0313", "0312")  # Try 3.13 first (more recent years)
+
+  enr_df <- NULL
+  tname_enr <- tempfile(pattern = "dbedt_enr_", tmpdir = tempdir(), fileext = ".xls")
+
+  for (tbl in tables_to_try) {
+    url_enrollment <- paste0(
+      "https://files.hawaii.gov/dbedt/economic/databook/",
+      db_year, "-individual/03/", tbl, yy, ".xls"
+    )
+
+    tryCatch({
+      response <- httr::GET(
+        url_enrollment,
+        httr::write_disk(tname_enr, overwrite = TRUE),
+        httr::timeout(120)
+      )
+
+      if (!httr::http_error(response)) {
+        file_info <- file.info(tname_enr)
+        if (file_info$size > 1000) {
+          temp_df <- readxl::read_excel(tname_enr, col_types = "text")
+
+          # Check if this table has the expected "Grade" header
+          has_grade <- any(grepl("Grade", unlist(temp_df[1:10, 1:2]), ignore.case = TRUE))
+          if (has_grade) {
+            enr_df <- temp_df
+            message(paste("  Downloaded enrollment table from:", url_enrollment))
+            break
+          }
+        }
+      }
+    }, error = function(e) {
+      # Continue to next table
+    })
+  }
+
+  # Clean up temp file
+  unlink(tname_enr)
+
+  # Also try to download ethnicity table (optional, for future use)
   url_ethnicity <- paste0(
     "https://files.hawaii.gov/dbedt/economic/databook/",
     db_year, "-individual/03/0319", yy, ".xls"
   )
 
-  # Create temp files
-  tname_enr <- tempfile(pattern = "dbedt_enr_", tmpdir = tempdir(), fileext = ".xls")
+  eth_df <- NULL
   tname_eth <- tempfile(pattern = "dbedt_eth_", tmpdir = tempdir(), fileext = ".xls")
 
-  # Download enrollment table
-  enr_df <- NULL
-  tryCatch({
-    response <- httr::GET(
-      url_enrollment,
-      httr::write_disk(tname_enr, overwrite = TRUE),
-      httr::timeout(120)
-    )
-
-    if (!httr::http_error(response)) {
-      file_info <- file.info(tname_enr)
-      if (file_info$size > 1000) {
-        enr_df <- readxl::read_excel(tname_enr, col_types = "text")
-        message(paste("  Downloaded enrollment table from:", url_enrollment))
-      }
-    }
-  }, error = function(e) {
-    message(paste("  Could not download enrollment table:", e$message))
-  })
-
-  # Download ethnicity table
-  eth_df <- NULL
   tryCatch({
     response <- httr::GET(
       url_ethnicity,
@@ -214,19 +244,17 @@ download_dbedt_enrollment <- function(end_year) {
       }
     }
   }, error = function(e) {
-    message(paste("  Could not download ethnicity table:", e$message))
+    # Ethnicity table is optional
   })
 
-  # Clean up temp files
-  unlink(tname_enr)
   unlink(tname_eth)
 
-  if (is.null(enr_df) && is.null(eth_df)) {
-    stop(paste("Could not download any DBEDT data for year", end_year))
+  if (is.null(enr_df)) {
+    stop(paste("Could not download enrollment data for year", end_year,
+               "\nNo DBEDT table found with 'Grade' header in tables 3.12 or 3.13"))
   }
 
   # Process DBEDT tables into standard format
-  # DBEDT tables have a different structure - aggregate data by county/state
   df <- process_dbedt_tables(enr_df, eth_df, end_year)
 
   df
@@ -293,33 +321,168 @@ standardize_hidoe_columns <- function(df) {
 #' Process DBEDT Data Book tables
 #'
 #' Converts DBEDT table format to standard enrollment format.
-#' DBEDT provides aggregate data (state/county level), not school-level.
+#' DBEDT provides aggregate data at state and county level, organized by grade.
+#' This function parses the enrollment by grade table (Table 3.12 or 3.13
+#' depending on year) and returns tidy enrollment data.
 #'
-#' @param enr_df Enrollment by grade data frame (Table 3.13)
-#' @param eth_df Ethnicity data frame (Table 3.19)
+#' Note: Some years (e.g., 2021) contain multiple school years in one table.
+#' This function extracts only the data for the requested end_year.
+#'
+#' @param enr_df Enrollment by grade data frame (Table 3.12 or 3.13)
+#' @param eth_df Ethnicity data frame (Table 3.19), optional
 #' @param end_year School year end
-#' @return Data frame in standard format
+#' @return Data frame in standard format with county-level enrollment by grade
 #' @keywords internal
 process_dbedt_tables <- function(enr_df, eth_df, end_year) {
 
-  # DBEDT tables are aggregate (state level), not school level
- # We create a single "state" row with available data
+  if (is.null(enr_df)) {
+    stop("No enrollment data available for year ", end_year)
+  }
 
-  result <- data.frame(
-    school_code = "STATE",
-    school_name = "Hawaii State Total",
-    school_type = "State",
-    complex_area = NA_character_,
-    stringsAsFactors = FALSE
+  # Find the header row - must contain county names (State, Honolulu, Hawaii, etc.)
+  # Look for row with "State" and other geographic columns
+  header_row <- NULL
+  for (i in 1:min(10, nrow(enr_df))) {
+    row_text <- paste(unlist(enr_df[i, ]), collapse = " ")
+    # Header row must contain both "State" and at least one county
+    has_state <- grepl("State", row_text, ignore.case = TRUE)
+    has_county <- grepl("Honolulu|Hawaii|Maui|Kauai", row_text, ignore.case = TRUE)
+    if (has_state && has_county) {
+      header_row <- i
+      break
+    }
+  }
+
+  if (is.null(header_row)) {
+    stop("Could not find header row in enrollment table for year ", end_year,
+         "\nExpected row with 'State' and county names (Honolulu, Hawaii, Maui, Kauai)")
+  }
+
+  # Extract headers from the header row
+  headers <- as.character(unlist(enr_df[header_row, ]))
+  headers <- trimws(headers)
+
+  # Standardize header names
+  headers <- gsub("\\s+", " ", headers)  # collapse multiple spaces
+  headers[grepl("State", headers, ignore.case = TRUE)] <- "state_total"
+  headers[grepl("Honolulu", headers, ignore.case = TRUE)] <- "honolulu"
+  headers[grepl("Hawaii", headers, ignore.case = TRUE) &
+          !grepl("State", headers, ignore.case = TRUE)] <- "hawaii_county"
+  headers[grepl("Maui", headers, ignore.case = TRUE)] <- "maui"
+  headers[grepl("Kauai", headers, ignore.case = TRUE)] <- "kauai"
+  headers[grepl("Charter", headers, ignore.case = TRUE)] <- "charter_schools"
+  headers[1] <- "grade"
+
+  names(enr_df) <- headers
+
+  # Filter to data rows only (after header, before footnotes)
+  data_start <- header_row + 1
+  data_rows <- enr_df[(data_start):nrow(enr_df), ]
+
+  # Remove empty rows and footnote rows
+  data_rows <- data_rows[!is.na(data_rows$grade), ]
+  data_rows <- data_rows[!grepl("^\\d/|^Source|^http|^accessed|^1/|^2/|^<", data_rows$grade), ]
+  data_rows <- data_rows[nchar(trimws(data_rows$grade)) > 0, ]
+
+  # Reset row indices for clean indexing
+  rownames(data_rows) <- NULL
+
+  # Handle multi-year tables (e.g., 2021 has both 2020-2021 and 2021-2022)
+  # Check if there are year headers within the data
+  start_year <- end_year - 1
+
+  # Look for year markers in the grade column (format: YYYY-YY or YYYY-YYYY)
+  year_rows <- grep("^[0-9]{4}-[0-9]{2,4}$", data_rows$grade)
+
+  if (length(year_rows) > 0) {
+    # Multi-year table - find the section for our target year
+    target_row <- grep(paste0("^", start_year, "-"), data_rows$grade)
+
+    if (length(target_row) > 0) {
+      # Find the range for our target year
+      target_start <- target_row[1]
+
+      # Find where the next year section starts (or end of data)
+      next_year_rows <- year_rows[year_rows > target_start]
+      if (length(next_year_rows) > 0) {
+        target_end <- next_year_rows[1] - 1
+      } else {
+        target_end <- nrow(data_rows)
+      }
+
+      # Extract just this section
+      data_rows <- data_rows[target_start:target_end, ]
+
+      # The first row is the year header with total, treat it as TOTAL grade
+      if (nrow(data_rows) > 0 && grepl("^[0-9]{4}-", data_rows$grade[1])) {
+        data_rows$grade[1] <- "TOTAL"
+      }
+    }
+  }
+
+  # Standardize grade names
+  data_rows$grade <- trimws(data_rows$grade)
+  data_rows$grade <- gsub("All grades", "TOTAL", data_rows$grade, ignore.case = TRUE)
+  data_rows$grade <- gsub("^Total$", "TOTAL", data_rows$grade, ignore.case = TRUE)
+  data_rows$grade <- gsub("Pre-Kindergarten|Nursery|Pre-K", "PK", data_rows$grade, ignore.case = TRUE)
+  data_rows$grade <- gsub("^Kindergarten$", "K", data_rows$grade, ignore.case = TRUE)
+  data_rows$grade <- gsub("Special Ed\\.|Special Education", "SPED", data_rows$grade, ignore.case = TRUE)
+
+  # Convert single-digit grade numbers to standard format (01, 02, etc.)
+  is_single_digit <- grepl("^[1-9]$", data_rows$grade)
+  data_rows$grade[is_single_digit] <- sprintf(
+    "%02d",
+    as.integer(data_rows$grade[is_single_digit])
   )
 
-  # Try to extract totals from enrollment table
-  if (!is.null(enr_df)) {
-    # DBEDT tables have the total in specific cells
-    # The structure varies but typically has State total row
-    # For now, return a placeholder that will be filled by process_enr
-    result$total <- NA_integer_
+  # Pivot to long format - one row per county/grade combination
+  county_cols <- c("state_total", "honolulu", "hawaii_county", "maui", "kauai", "charter_schools")
+  county_cols <- intersect(county_cols, names(data_rows))
+
+  # Build result data frame
+  result_list <- list()
+
+  for (county in county_cols) {
+    if (county %in% names(data_rows)) {
+      county_data <- data.frame(
+        county_name = county,
+        grade = data_rows$grade,
+        enrollment = safe_numeric(data_rows[[county]]),
+        stringsAsFactors = FALSE
+      )
+      result_list[[county]] <- county_data
+    }
   }
+
+  result <- do.call(rbind, result_list)
+  rownames(result) <- NULL
+
+  # Add metadata
+  result$end_year <- end_year
+
+  # Standardize county names for display
+  result$county_name <- dplyr::case_when(
+    result$county_name == "state_total" ~ "State Total",
+    result$county_name == "honolulu" ~ "Honolulu",
+    result$county_name == "hawaii_county" ~ "Hawaii County",
+    result$county_name == "maui" ~ "Maui",
+    result$county_name == "kauai" ~ "Kauai",
+    result$county_name == "charter_schools" ~ "Charter Schools",
+    TRUE ~ result$county_name
+  )
+
+  # Add aggregation level indicator
+  result$agg_level <- ifelse(
+    result$county_name == "State Total",
+    "STATE",
+    ifelse(result$county_name == "Charter Schools", "CHARTER", "COUNTY")
+  )
+
+  # Reorder columns
+  result <- result[, c("end_year", "agg_level", "county_name", "grade", "enrollment")]
+
+  # Remove rows with NA enrollment (footnote markers like "(1/)")
+  result <- result[!is.na(result$enrollment), ]
 
   result
 }

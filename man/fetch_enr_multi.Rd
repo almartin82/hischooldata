@@ -22,6 +22,6 @@ Downloads and combines enrollment data for multiple school years.
 \examples{
 \dontrun{
 # Get 3 years of data
-enr_multi <- fetch_enr_multi(2022:2024)
+enr_multi <- fetch_enr_multi(2023:2025)
 }
 }

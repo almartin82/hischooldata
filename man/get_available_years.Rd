@@ -9,14 +9,33 @@ get_available_years()
 \value{
 A list with components:
 \describe{
-\item{min_year}{Earliest available year (2010)}
+\item{min_year}{Earliest available year (2011)}
 \item{max_year}{Most recent available year (2025)}
+\item{years}{Vector of all available years}
 \item{description}{Human-readable description of the date range}
 }
 }
 \description{
 Returns the range of years for which enrollment data can be fetched
-from the Hawaii Department of Education.
+from the Hawaii Department of Education via DBEDT Data Book.
+}
+\details{
+The \code{end_year} parameter follows the convention that it represents the
+END year of the school year. For example:
+\itemize{
+\item end_year = 2024 means the 2023-24 school year (ending June 2024)
+\item end_year = 2025 means the 2024-25 school year (ending June 2025)
+}
+
+Note on data sources: DBEDT Data Books are published annually and typically
+contain enrollment data for the school year that ends in that publication year.
+For example, the 2023 Data Book contains 2023-24 school year data (end_year=2024).
+
+Known gaps:
+\itemize{
+\item end_year 2012 is not available (no 2011 Data Book published)
+\item end_year 2020 appears in both 2019 and 2020 Data Books (COVID impact)
+}
 }
 \examples{
 get_available_years()
