@@ -3,6 +3,8 @@
 **[Documentation](https://almartin82.github.io/hischooldata/)** \|
 **[Getting
 Started](https://almartin82.github.io/hischooldata/articles/quickstart.html)**
+\| **[Enrollment
+Trends](https://almartin82.github.io/hischooldata/articles/enrollment-trends.html)**
 
 Fetch and analyze Hawaii school enrollment data from the Hawaii
 Department of Education (HIDOE) in R or Python.
@@ -46,9 +48,9 @@ enr %>%
   select(end_year, n_students)
 ```
 
-![Enrollment decline](reference/figures/enrollment-decline.png)
-
-Enrollment decline
+See [Enrollment Trends
+vignette](https://almartin82.github.io/hischooldata/articles/enrollment-trends.html#enrollment-has-been-declining-for-a-decade)
+for visualization.
 
 ------------------------------------------------------------------------
 
@@ -66,9 +68,9 @@ enr_2024 %>%
   arrange(desc(n_students))
 ```
 
-![Racial diversity](reference/figures/diversity.png)
-
-Racial diversity
+See [Enrollment Trends
+vignette](https://almartin82.github.io/hischooldata/articles/enrollment-trends.html#the-most-diverse-state-in-america)
+for visualization.
 
 ------------------------------------------------------------------------
 
@@ -102,9 +104,9 @@ enr %>%
   tidyr::pivot_wider(names_from = grade_level, values_from = n_students)
 ```
 
-![K vs high school](reference/figures/k-vs-12.png)
-
-K vs high school
+See [Enrollment Trends
+vignette](https://almartin82.github.io/hischooldata/articles/enrollment-trends.html#kindergarten-is-shrinking-faster-than-high-school)
+for visualization.
 
 ------------------------------------------------------------------------
 
@@ -159,9 +161,9 @@ enr %>%
   summarize(n = sum(n_students, na.rm = TRUE))
 ```
 
-![Island comparison](reference/figures/islands.png)
-
-Island comparison
+See [Enrollment Trends
+vignette](https://almartin82.github.io/hischooldata/articles/enrollment-trends.html#neighbor-islands-are-holding-steady)
+for visualization.
 
 ------------------------------------------------------------------------
 
@@ -334,5 +336,7 @@ MIT
 
 ### All vignettes
 
+- [Hawaii Enrollment
+  Trends](https://almartin82.github.io/hischooldata/articles/enrollment-trends.md):
 - [Introduction to
   hischooldata](https://almartin82.github.io/hischooldata/articles/hischooldata.md):
