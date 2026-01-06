@@ -13,7 +13,7 @@ Fetch and analyze Hawaii school enrollment data from the Hawaii Department of Ed
 
 ## What can you find with hischooldata?
 
-**15 years of enrollment data (2010-2025).** 180,000 students today. One statewide district. Here are ten stories hiding in the numbers:
+**15 years of enrollment data (2010-2025).** 180,000 students today. One statewide district. Here are fifteen stories hiding in the numbers:
 
 ---
 
@@ -168,6 +168,99 @@ enr %>%
   filter(is_state, grade_level == "TOTAL", subgroup == "lep") %>%
   select(end_year, n_students, pct)
 ```
+
+---
+
+### 11. Honolulu dominates but neighbor islands hold stronger
+
+Honolulu County (Oahu) has about two-thirds of all students, but neighbor island counties have maintained enrollment more effectively during the statewide decline.
+
+```r
+enr %>%
+  filter(grade_level == "TOTAL", subgroup == "total_enrollment") %>%
+  mutate(island_group = case_when(
+    grepl("Honolulu|Oahu", complex_area) ~ "Oahu",
+    TRUE ~ "Neighbor Islands"
+  )) %>%
+  group_by(end_year, island_group) %>%
+  summarize(n = sum(n_students, na.rm = TRUE))
+```
+
+![Honolulu vs Neighbor Islands](https://almartin82.github.io/hischooldata/articles/enrollment-trends_files/figure-html/honolulu-vs-neighbor-1.png)
+
+---
+
+### 12. Elementary schools losing students faster than high schools
+
+Elementary grades (K-5) have seen steeper enrollment declines than secondary grades (6-12), reflecting declining birth rates over the past decade.
+
+```r
+enr %>%
+  filter(is_state, subgroup == "total_enrollment",
+         !grade_level %in% c("TOTAL", "PK")) %>%
+  mutate(level = case_when(
+    grade_level %in% c("K", "01", "02", "03", "04", "05") ~ "Elementary",
+    grade_level %in% c("06", "07", "08") ~ "Middle",
+    TRUE ~ "High School"
+  )) %>%
+  group_by(end_year, level) %>%
+  summarize(n = sum(n_students, na.rm = TRUE))
+```
+
+![Elementary vs Secondary](https://almartin82.github.io/hischooldata/articles/enrollment-trends_files/figure-html/elementary-vs-secondary-1.png)
+
+---
+
+### 13. Maui's tourism economy shows in school enrollment
+
+Maui County has seen enrollment fluctuations tied to its tourism-dependent economy. The 2023 wildfires added new challenges to an already changing population.
+
+```r
+enr %>%
+  filter(grade_level == "TOTAL", subgroup == "total_enrollment") %>%
+  filter(grepl("Maui|Molokai|Lanai", complex_area)) %>%
+  group_by(end_year) %>%
+  summarize(n = sum(n_students, na.rm = TRUE))
+```
+
+![Maui enrollment](https://almartin82.github.io/hischooldata/articles/enrollment-trends_files/figure-html/maui-n_students-1.png)
+
+---
+
+### 14. Pre-K enrollment signals future trends
+
+Pre-Kindergarten enrollment provides an early signal of what elementary schools will see in coming years. Hawaii's Pre-K numbers show the declining pipeline.
+
+```r
+enr %>%
+  filter(is_state, grade_level == "PK", subgroup == "total_enrollment") %>%
+  select(end_year, n_students)
+```
+
+![Pre-K trends](https://almartin82.github.io/hischooldata/articles/enrollment-trends_files/figure-html/prek-trends-1.png)
+
+---
+
+### 15. Big Island holds largest neighbor island enrollment
+
+Hawaii County (Big Island) has the largest student population outside Oahu, serving rural communities across a geographic area larger than all other Hawaiian islands combined.
+
+```r
+enr_2024 %>%
+  filter(grade_level == "TOTAL", subgroup == "total_enrollment") %>%
+  mutate(island = case_when(
+    grepl("Hawaii|Kona|Kohala|Hilo", complex_area) ~ "Big Island",
+    grepl("Maui|Molokai|Lanai", complex_area) ~ "Maui County",
+    grepl("Kauai", complex_area) ~ "Kauai",
+    TRUE ~ "Other"
+  )) %>%
+  filter(island != "Other", !grepl("Honolulu|Oahu", complex_area)) %>%
+  group_by(island) %>%
+  summarize(n = sum(n_students, na.rm = TRUE)) %>%
+  arrange(desc(n))
+```
+
+![Neighbor Island enrollment](https://almartin82.github.io/hischooldata/articles/enrollment-trends_files/figure-html/big-island-n_students-1.png)
 
 ---
 
