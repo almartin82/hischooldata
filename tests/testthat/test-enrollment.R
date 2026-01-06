@@ -79,7 +79,9 @@ test_that("fetch_enr returns correct column structure", {
 
   df <- fetch_enr(2024, use_cache = TRUE)
 
-  expected_cols <- c("end_year", "agg_level", "county_name", "grade", "enrollment")
+  expected_cols <- c("end_year", "district_id", "district_name", "county_name",
+                     "type", "grade_level", "subgroup", "n_students", "pct",
+                     "is_state", "is_county", "is_charter")
   expect_true(all(expected_cols %in% names(df)))
 })
 
@@ -88,10 +90,10 @@ test_that("fetch_enr returns correct aggregation levels", {
 
   df <- fetch_enr(2024, use_cache = TRUE)
 
-  agg_levels <- unique(df$agg_level)
-  expect_true("STATE" %in% agg_levels)
-  expect_true("COUNTY" %in% agg_levels)
-  expect_true("CHARTER" %in% agg_levels)
+  types <- unique(df$type)
+  expect_true("STATE" %in% types)
+  expect_true("COUNTY" %in% types)
+  expect_true("CHARTER" %in% types)
 })
 
 test_that("fetch_enr returns correct county names", {
@@ -112,7 +114,7 @@ test_that("fetch_enr returns correct grade levels", {
 
   df <- fetch_enr(2024, use_cache = TRUE)
 
-  grades <- unique(df$grade)
+  grades <- unique(df$grade_level)
 
   # Should have TOTAL and grade levels
   expect_true("TOTAL" %in% grades)
@@ -131,7 +133,7 @@ test_that("2025 state total matches 2024 Data Book (2024-25 school year)", {
 
   df <- fetch_enr(2025, use_cache = TRUE)
 
-  state_total <- df[df$county_name == "State Total" & df$grade == "TOTAL", "enrollment"]
+  state_total <- df[df$county_name == "State Total" & df$grade_level == "TOTAL", "n_students"]
   # 2024 Data Book Table 3.13: 2024-25 Total = 167,076
   expect_equal(state_total, 167076)
 })
@@ -142,23 +144,23 @@ test_that("2025 county totals match 2024 Data Book", {
   df <- fetch_enr(2025, use_cache = TRUE)
 
   # Honolulu is the largest county by far (~62% of state)
-  honolulu_total <- df[df$county_name == "Honolulu" & df$grade == "TOTAL", "enrollment"]
+  honolulu_total <- df[df$county_name == "Honolulu" & df$grade_level == "TOTAL", "n_students"]
   expect_equal(honolulu_total, 103985)  # Verified from 2024 Data Book
 
   # Hawaii County
-  hawaii_total <- df[df$county_name == "Hawaii County" & df$grade == "TOTAL", "enrollment"]
+  hawaii_total <- df[df$county_name == "Hawaii County" & df$grade_level == "TOTAL", "n_students"]
   expect_equal(hawaii_total, 22715)
 
   # Maui
-  maui_total <- df[df$county_name == "Maui" & df$grade == "TOTAL", "enrollment"]
+  maui_total <- df[df$county_name == "Maui" & df$grade_level == "TOTAL", "n_students"]
   expect_equal(maui_total, 18734)
 
   # Kauai
-  kauai_total <- df[df$county_name == "Kauai" & df$grade == "TOTAL", "enrollment"]
+  kauai_total <- df[df$county_name == "Kauai" & df$grade_level == "TOTAL", "n_students"]
   expect_equal(kauai_total, 8548)
 
   # Charter schools
-  charter_total <- df[df$county_name == "Charter Schools" & df$grade == "TOTAL", "enrollment"]
+  charter_total <- df[df$county_name == "Charter Schools" & df$grade_level == "TOTAL", "n_students"]
   expect_equal(charter_total, 13094)
 })
 
@@ -169,11 +171,11 @@ test_that("2025 grade-level enrollments match 2024 Data Book", {
   state_df <- df[df$county_name == "State Total", ]
 
   # Verify specific grade values from 2024 Data Book Table 3.13
-  expect_equal(state_df[state_df$grade == "PK", "enrollment"], 1736)
-  expect_equal(state_df[state_df$grade == "K", "enrollment"], 11746)
-  expect_equal(state_df[state_df$grade == "01", "enrollment"], 12451)
-  expect_equal(state_df[state_df$grade == "09", "enrollment"], 14241)
-  expect_equal(state_df[state_df$grade == "12", "enrollment"], 11905)
+  expect_equal(state_df[state_df$grade_level == "PK", "n_students"], 1736)
+  expect_equal(state_df[state_df$grade_level == "K", "n_students"], 11746)
+  expect_equal(state_df[state_df$grade_level == "01", "n_students"], 12451)
+  expect_equal(state_df[state_df$grade_level == "09", "n_students"], 14241)
+  expect_equal(state_df[state_df$grade_level == "12", "n_students"], 11905)
 })
 
 test_that("2024 state total matches 2023 Data Book (2023-24 school year)", {
@@ -181,7 +183,7 @@ test_that("2024 state total matches 2023 Data Book (2023-24 school year)", {
 
   df <- fetch_enr(2024, use_cache = TRUE)
 
-  state_total <- df[df$county_name == "State Total" & df$grade == "TOTAL", "enrollment"]
+  state_total <- df[df$county_name == "State Total" & df$grade_level == "TOTAL", "n_students"]
   # 2023 Data Book: 2023-24 school year total
   expect_equal(state_total, 169308)
 })
@@ -191,7 +193,7 @@ test_that("2020 state total matches 2019 Data Book (2019-20 school year)", {
 
   df <- fetch_enr(2020, use_cache = TRUE)
 
-  state_total <- df[df$county_name == "State Total" & df$grade == "TOTAL", "enrollment"]
+  state_total <- df[df$county_name == "State Total" & df$grade_level == "TOTAL", "n_students"]
   # 2019 Data Book: 2019-20 school year total = 181,088
   expect_equal(state_total, 181088)
 })
@@ -201,7 +203,7 @@ test_that("2017 state total matches 2016 Data Book (2016-17 school year)", {
 
   df <- fetch_enr(2017, use_cache = TRUE)
 
-  state_total <- df[df$county_name == "State Total" & df$grade == "TOTAL", "enrollment"]
+  state_total <- df[df$county_name == "State Total" & df$grade_level == "TOTAL", "n_students"]
   # 2016 Data Book: 2016-17 school year total
   expect_equal(state_total, 181550)
 })
@@ -211,7 +213,7 @@ test_that("2013 state total matches 2012 Data Book (2012-13 school year)", {
 
   df <- fetch_enr(2013, use_cache = TRUE)
 
-  state_total <- df[df$county_name == "State Total" & df$grade == "TOTAL", "enrollment"]
+  state_total <- df[df$county_name == "State Total" & df$grade_level == "TOTAL", "n_students"]
   # 2012 Data Book: 2012-13 school year total
   expect_equal(state_total, 184760)
 })
@@ -221,7 +223,7 @@ test_that("2011 state total matches 2010 Data Book (2010-11 school year)", {
 
   df <- fetch_enr(2011, use_cache = TRUE)
 
-  state_total <- df[df$county_name == "State Total" & df$grade == "TOTAL", "enrollment"]
+  state_total <- df[df$county_name == "State Total" & df$grade_level == "TOTAL", "n_students"]
   # 2010 Data Book: 2010-11 school year total
   expect_equal(state_total, 179577)
 })
@@ -234,7 +236,7 @@ test_that("2021 correctly extracts 2020-21 data from 2020 Data Book", {
   df <- fetch_enr(2021, use_cache = TRUE)
 
   # 2020 Data Book contains 2020-21 data (but we use 2021 Data Book which has both)
-  state_total <- df[df$county_name == "State Total" & df$grade == "TOTAL", "enrollment"]
+  state_total <- df[df$county_name == "State Total" & df$grade_level == "TOTAL", "n_students"]
   # 2020-21 school year total from 2021 Data Book multi-year table
   expect_equal(state_total, 176441)
 })
@@ -246,7 +248,7 @@ test_that("2022 correctly extracts 2021-22 data from 2021 Data Book", {
 
   # 2021 Data Book contains both 2020-21 AND 2021-22 data
   # end_year=2022 should extract 2021-22 data
-  state_total <- df[df$county_name == "State Total" & df$grade == "TOTAL", "enrollment"]
+  state_total <- df[df$county_name == "State Total" & df$grade_level == "TOTAL", "n_students"]
   # Note: 2021-22 total from 2021 Data Book is 173,178 (not 170,209 which is 2022-23)
   expect_equal(state_total, 173178)
 })
@@ -258,7 +260,7 @@ test_that("SPED data is available for years 2011-2022", {
 
   # SPED figures are shown separately until 2022
   df <- fetch_enr(2022, use_cache = TRUE)
-  grades <- unique(df$grade)
+  grades <- unique(df$grade_level)
   expect_true("SPED" %in% grades)
 })
 
@@ -268,7 +270,7 @@ test_that("SPED data is NOT available for 2024-2025", {
   # Per 2024 Data Book footnote: "Special Education figures were not shown
   # separately in the 2024-2025 enrollment count"
   df <- fetch_enr(2025, use_cache = TRUE)
-  grades <- unique(df$grade)
+  grades <- unique(df$grade_level)
   expect_false("SPED" %in% grades)
 })
 
@@ -280,13 +282,13 @@ test_that("no zero enrollments where data should exist", {
   df <- fetch_enr(2025, use_cache = TRUE)
 
   # State totals should never be zero
-  state_totals <- df[df$county_name == "State Total", "enrollment"]
+  state_totals <- df[df$county_name == "State Total", "n_students"]
   expect_true(all(state_totals > 0))
 
   # Grade-level enrollments should be reasonable (> 1000 for most grades)
-  state_grades <- df[df$county_name == "State Total" & df$grade != "TOTAL", ]
+  state_grades <- df[df$county_name == "State Total" & df$grade_level != "TOTAL", ]
   # PK might be smaller, but K-12 should all be > 10000
-  k12_grades <- state_grades[!state_grades$grade %in% c("PK", "SPED"), "enrollment"]
+  k12_grades <- state_grades[!state_grades$grade_level %in% c("PK", "SPED"), "n_students"]
   expect_true(all(k12_grades > 10000))
 })
 
@@ -304,9 +306,9 @@ test_that("county totals sum approximately to state total", {
   df <- fetch_enr(2025, use_cache = TRUE)
 
   # Get totals
-  state_total <- df[df$county_name == "State Total" & df$grade == "TOTAL", "enrollment"]
-  county_totals <- df[df$agg_level == "COUNTY" & df$grade == "TOTAL", "enrollment"]
-  charter_total <- df[df$county_name == "Charter Schools" & df$grade == "TOTAL", "enrollment"]
+  state_total <- df[df$county_name == "State Total" & df$grade_level == "TOTAL", "n_students"]
+  county_totals <- df[df$type == "COUNTY" & df$grade_level == "TOTAL", "n_students"]
+  charter_total <- df[df$county_name == "Charter Schools" & df$grade_level == "TOTAL", "n_students"]
 
   # Counties + Charter should approximately equal State Total
   sum_parts <- sum(county_totals) + charter_total
@@ -322,7 +324,7 @@ test_that("enrollment trends are reasonable across years", {
   years_to_check <- c(2017, 2020, 2024)
   totals <- sapply(years_to_check, function(yr) {
     df <- fetch_enr(yr, use_cache = TRUE)
-    df[df$county_name == "State Total" & df$grade == "TOTAL", "enrollment"]
+    df[df$county_name == "State Total" & df$grade_level == "TOTAL", "n_students"]
   })
 
   # Enrollment should be reasonably consistent (no wild swings)
@@ -436,10 +438,10 @@ test_that("all available years return valid data", {
 
     # Basic structure checks
     expect_true(nrow(df) > 50, label = paste("Year", yr, "has enough rows"))
-    expect_true("enrollment" %in% names(df), label = paste("Year", yr, "has enrollment column"))
+    expect_true("n_students" %in% names(df), label = paste("Year", yr, "has n_students column"))
 
     # State total should exist and be reasonable
-    state_total <- df[df$county_name == "State Total" & df$grade == "TOTAL", "enrollment"]
+    state_total <- df[df$county_name == "State Total" & df$grade_level == "TOTAL", "n_students"]
     expect_true(
       length(state_total) == 1 && state_total > 150000 && state_total < 200000,
       label = paste("Year", yr, "has reasonable state total:", state_total)
@@ -476,7 +478,7 @@ test_that("all years return correct state totals", {
   for (yr_str in names(expected_totals)) {
     yr <- as.integer(yr_str)
     df <- fetch_enr(yr, use_cache = TRUE)
-    actual <- df[df$county_name == "State Total" & df$grade == "TOTAL", "enrollment"]
+    actual <- df[df$county_name == "State Total" & df$grade_level == "TOTAL", "n_students"]
     expected <- expected_totals[[yr_str]]
 
     expect_equal(
