@@ -1,32 +1,13 @@
----
-title: "Hawaii Enrollment Trends"
-output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{Hawaii Enrollment Trends}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
----
+# Hawaii Enrollment Trends
 
-```{r setup, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  fig.width = 10,
-  fig.height = 6,
-  out.width = "100%",
-  message = FALSE,
-  warning = FALSE
-)
-```
-
-```{r load-packages}
+``` r
 library(hischooldata)
 library(ggplot2)
 library(dplyr)
 library(scales)
 ```
 
-```{r theme}
+``` r
 theme_readme <- function() {
   theme_minimal(base_size = 14) +
     theme(
@@ -41,7 +22,7 @@ colors <- c("total" = "#2C3E50", "white" = "#3498DB", "black" = "#E74C3C",
             "hispanic" = "#F39C12", "asian" = "#9B59B6", "hawaiian" = "#1ABC9C")
 ```
 
-```{r fetch-data, cache = TRUE}
+``` r
 # Get available years
 years <- get_available_years()
 if (is.list(years)) {
@@ -58,11 +39,13 @@ enr <- fetch_enr_multi(year_range)
 enr_current <- fetch_enr(max_year)
 ```
 
-## 1. Hawaii is America's only statewide school district
+## 1. Hawaii is America’s only statewide school district
 
-Unlike every other state, Hawaii operates as a single statewide school district with approximately 290 schools. No local school boards, no property tax funding. One state, one system.
+Unlike every other state, Hawaii operates as a single statewide school
+district with approximately 290 schools. No local school boards, no
+property tax funding. One state, one system.
 
-```{r statewide-district}
+``` r
 statewide <- enr_current %>%
   filter(type == "STATE", grade_level == "TOTAL") %>%
   select(n_students)
@@ -73,14 +56,17 @@ n_counties <- enr_current %>%
   nrow()
 
 cat("Total students:", format(statewide$n_students, big.mark = ","), "\n")
+#> Total students: 167,076
 cat("Counties served:", n_counties, "(plus Charter Schools)\n")
+#> Counties served: 4 (plus Charter Schools)
 ```
 
 ## 2. Enrollment has been declining for a decade
 
-Hawaii lost 15,000 students since 2015. High housing costs push families to the mainland, and birth rates are falling.
+Hawaii lost 15,000 students since 2015. High housing costs push families
+to the mainland, and birth rates are falling.
 
-```{r n_students-decline}
+``` r
 state_trend <- enr %>%
   filter(type == "STATE", grade_level == "TOTAL")
 
@@ -94,11 +80,15 @@ ggplot(state_trend, aes(x = end_year, y = n_students)) +
   theme_readme()
 ```
 
+![](enrollment-trends_files/figure-html/n_students-decline-1.png)
+
 ## 3. Enrollment by County
 
-Hawaii's single statewide district serves four counties plus charter schools. Honolulu (Oahu) dominates n_students, with about two-thirds of all students.
+Hawaii’s single statewide district serves four counties plus charter
+schools. Honolulu (Oahu) dominates n_students, with about two-thirds of
+all students.
 
-```{r county-distribution}
+``` r
 county_enr <- enr_current %>%
   filter(grade_level == "TOTAL", type %in% c("COUNTY", "CHARTER")) %>%
   mutate(county_label = reorder(county_name, -n_students))
@@ -113,11 +103,15 @@ ggplot(county_enr, aes(x = county_label, y = n_students)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
+![](enrollment-trends_files/figure-html/county-distribution-1.png)
+
 ## 4. COVID hit n_students hard
 
-When the pandemic struck, families moved to the mainland or shifted to private schools. Hawaii saw significant n_students drops across all counties.
+When the pandemic struck, families moved to the mainland or shifted to
+private schools. Hawaii saw significant n_students drops across all
+counties.
 
-```{r covid-impact}
+``` r
 # Show year-over-year change during COVID
 covid_change <- enr %>%
   filter(end_year %in% c(2020, 2021), grade_level == "TOTAL", type == "STATE") %>%
@@ -129,13 +123,15 @@ if (nrow(covid_change) == 2) {
   cat("Enrollment change 2020-2021:", format(change, big.mark = ","),
       sprintf("(%.1f%%)", pct_change), "\n")
 }
+#> Enrollment change 2020-2021: -4,647 (-2.6%)
 ```
 
 ## 5. Kindergarten is shrinking faster than high school
 
-Hawaii's kindergarten n_students has dropped over the years. The pipeline of students entering the system is narrowing.
+Hawaii’s kindergarten n_students has dropped over the years. The
+pipeline of students entering the system is narrowing.
 
-```{r k-vs-12}
+``` r
 k_trend <- enr %>%
   filter(type == "STATE", grade_level %in% c("K", "09", "12")) %>%
   mutate(grade_label = case_when(
@@ -154,27 +150,35 @@ ggplot(k_trend, aes(x = end_year, y = n_students, color = grade_label)) +
   theme_readme()
 ```
 
+![](enrollment-trends_files/figure-html/k-vs-12-1.png)
+
 ## 6. Private school competition is fierce
 
-Hawaii has one of the highest private school n_students rates in the nation. Kamehameha Schools, Punahou, and Iolani draw thousands of students who might otherwise attend public schools.
+Hawaii has one of the highest private school n_students rates in the
+nation. Kamehameha Schools, Punahou, and Iolani draw thousands of
+students who might otherwise attend public schools.
 
-```{r private-competition}
+``` r
 # Public n_students as context
 public_total <- enr_current %>%
   filter(type == "STATE", grade_level == "TOTAL") %>%
   pull(n_students)
 
 cat("Public school n_students:", format(public_total, big.mark = ","), "\n")
+#> Public school n_students: 167,076
 cat("Estimated private school students: ~35,000\n")
+#> Estimated private school students: ~35,000
 cat("Private school share: ~",
     round(35000 / (public_total + 35000) * 100, 1), "%\n", sep = "")
+#> Private school share: ~17.3%
 ```
 
 ## 7. Charter schools are growing
 
-Hawaii's charter school n_students has been increasing as an alternative to traditional public schools managed by the statewide district.
+Hawaii’s charter school n_students has been increasing as an alternative
+to traditional public schools managed by the statewide district.
 
-```{r charter-growth}
+``` r
 charter_trend <- enr %>%
   filter(type == "CHARTER", grade_level == "TOTAL")
 
@@ -188,11 +192,14 @@ ggplot(charter_trend, aes(x = end_year, y = n_students)) +
   theme_readme()
 ```
 
+![](enrollment-trends_files/figure-html/charter-growth-1.png)
+
 ## 8. County trends over time
 
-Each county shows its own n_students trend. Honolulu (Oahu) dominates overall n_students but has seen the largest absolute decline.
+Each county shows its own n_students trend. Honolulu (Oahu) dominates
+overall n_students but has seen the largest absolute decline.
 
-```{r county-trends}
+``` r
 county_trend <- enr %>%
   filter(grade_level == "TOTAL", type == "COUNTY")
 
@@ -206,11 +213,14 @@ ggplot(county_trend, aes(x = end_year, y = n_students, color = county_name)) +
   theme_readme()
 ```
 
+![](enrollment-trends_files/figure-html/county-trends-1.png)
+
 ## 9. Special education n_students
 
-Hawaii tracks special education n_students separately from regular grades in the DBEDT data.
+Hawaii tracks special education n_students separately from regular
+grades in the DBEDT data.
 
-```{r special-ed}
+``` r
 sped <- enr_current %>%
   filter(type == "STATE", grade_level == "SPED")
 
@@ -223,13 +233,15 @@ if (nrow(sped) > 0) {
 } else {
   cat("Special education data not separately reported for this year.\n")
 }
+#> Special education data not separately reported for this year.
 ```
 
 ## 10. Grade level distribution
 
-Hawaii's n_students by grade shows the typical K-12 distribution, with kindergarten serving as the entry point to the system.
+Hawaii’s n_students by grade shows the typical K-12 distribution, with
+kindergarten serving as the entry point to the system.
 
-```{r grade-distribution}
+``` r
 grade_dist <- enr_current %>%
   filter(type == "STATE", !grade_level %in% c("TOTAL", "SPED")) %>%
   mutate(grade_level = factor(grade_level, levels = c("PK", "K", sprintf("%02d", 1:12))))
@@ -243,11 +255,15 @@ ggplot(grade_dist, aes(x = grade_level, y = n_students)) +
   theme_readme()
 ```
 
+![](enrollment-trends_files/figure-html/grade-distribution-1.png)
+
 ## 11. Honolulu dominates but neighbor islands hold stronger
 
-Honolulu County (Oahu) has about two-thirds of all students, but neighbor island counties have maintained n_students more effectively during the statewide decline.
+Honolulu County (Oahu) has about two-thirds of all students, but
+neighbor island counties have maintained n_students more effectively
+during the statewide decline.
 
-```{r honolulu-vs-neighbor}
+``` r
 island_comparison <- enr %>%
   filter(grade_level == "TOTAL", type == "COUNTY") %>%
   mutate(island_group = ifelse(county_name == "Honolulu", "Honolulu (Oahu)", "Neighbor Islands")) %>%
@@ -265,11 +281,15 @@ ggplot(island_comparison, aes(x = end_year, y = n_students, color = island_group
   theme_readme()
 ```
 
+![](enrollment-trends_files/figure-html/honolulu-vs-neighbor-1.png)
+
 ## 12. Elementary schools losing students faster than high schools
 
-Elementary grades (K-5) have seen steeper n_students declines than secondary grades (6-12), reflecting declining birth rates over the past decade.
+Elementary grades (K-5) have seen steeper n_students declines than
+secondary grades (6-12), reflecting declining birth rates over the past
+decade.
 
-```{r elementary-vs-secondary}
+``` r
 level_comparison <- enr %>%
   filter(type == "STATE", !grade_level %in% c("TOTAL", "SPED", "PK")) %>%
   mutate(level = case_when(
@@ -295,11 +315,15 @@ ggplot(level_comparison, aes(x = end_year, y = n_students, color = level)) +
   theme_readme()
 ```
 
-## 13. Maui's tourism economy shows in school n_students
+![](enrollment-trends_files/figure-html/elementary-vs-secondary-1.png)
 
-Maui County has seen n_students fluctuations tied to its tourism-dependent economy. The 2023 wildfires added new challenges to an already changing population.
+## 13. Maui’s tourism economy shows in school n_students
 
-```{r maui-n_students}
+Maui County has seen n_students fluctuations tied to its
+tourism-dependent economy. The 2023 wildfires added new challenges to an
+already changing population.
+
+``` r
 maui_trend <- enr %>%
   filter(grade_level == "TOTAL", county_name == "Maui")
 
@@ -313,11 +337,15 @@ ggplot(maui_trend, aes(x = end_year, y = n_students)) +
   theme_readme()
 ```
 
+![](enrollment-trends_files/figure-html/maui-n_students-1.png)
+
 ## 14. Pre-K n_students signals future trends
 
-Pre-Kindergarten n_students provides an early signal of what elementary schools will see in coming years. Hawaii's Pre-K numbers show the declining pipeline.
+Pre-Kindergarten n_students provides an early signal of what elementary
+schools will see in coming years. Hawaii’s Pre-K numbers show the
+declining pipeline.
 
-```{r prek-trends}
+``` r
 prek_trend <- enr %>%
   filter(type == "STATE", grade_level == "PK")
 
@@ -335,11 +363,15 @@ if (nrow(prek_trend) > 0 && sum(prek_trend$n_students, na.rm = TRUE) > 0) {
 }
 ```
 
+![](enrollment-trends_files/figure-html/prek-trends-1.png)
+
 ## 15. Big Island holds largest neighbor island n_students
 
-Hawaii County (Big Island) has the largest student population outside Oahu, serving rural communities across a geographic area larger than all other Hawaiian islands combined.
+Hawaii County (Big Island) has the largest student population outside
+Oahu, serving rural communities across a geographic area larger than all
+other Hawaiian islands combined.
 
-```{r big-island-n_students}
+``` r
 neighbor_comparison <- enr_current %>%
   filter(grade_level == "TOTAL", type == "COUNTY", county_name != "Honolulu") %>%
   mutate(county_label = reorder(county_name, -n_students))
@@ -353,3 +385,5 @@ ggplot(neighbor_comparison, aes(x = county_label, y = n_students)) +
        x = "", y = "Students") +
   theme_readme()
 ```
+
+![](enrollment-trends_files/figure-html/big-island-n_students-1.png)
