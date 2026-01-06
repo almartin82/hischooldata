@@ -50,7 +50,12 @@ fetch_enr <- function(end_year, tidy = TRUE, use_cache = TRUE) {
   # Check cache first
   if (use_cache && cache_exists(end_year, "enrollment")) {
     message(paste("Using cached data for", end_year))
-    return(read_cache(end_year, "enrollment"))
+    cached_data <- read_cache(end_year, "enrollment")
+    # Apply tidy transformation if requested and data isn't already tidy
+    if (tidy && !"subgroup" %in% names(cached_data)) {
+      cached_data <- tidy_enr(cached_data)
+    }
+    return(cached_data)
   }
 
   # Get raw data
@@ -67,6 +72,11 @@ fetch_enr <- function(end_year, tidy = TRUE, use_cache = TRUE) {
     }
   } else {
     result <- raw
+  }
+
+  # Apply tidy transformation if requested
+  if (tidy) {
+    result <- tidy_enr(result)
   }
 
   # Cache the result
