@@ -7,6 +7,13 @@
 #
 # ==============================================================================
 
+globalVariables(c(
+  "grade", "enrollment", "agg_level",
+  "end_year", "district_id", "district_name", "county_name",
+  "type", "grade_level", "subgroup", "n_students", "pct",
+  "aggregation_flag", "is_state", "is_county", "is_charter"
+))
+
 #' Transform enrollment data to tidy format
 #'
 #' Converts raw/semi-tidy Hawaii enrollment data into the standard tidy format
