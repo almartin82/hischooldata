@@ -55,7 +55,7 @@ specific school year:
 library(hischooldata)
 
 # Get 2024 enrollment data (2023-24 school year)
-enr_2024 <- fetch_enr(2024)
+enr_2024 <- fetch_enr(2024, use_cache = TRUE)
 head(enr_2024)
 ```
 
@@ -98,7 +98,7 @@ library(dplyr)
 library(ggplot2)
 
 # Get recent years
-enr_multi <- fetch_enr_multi(2020:2024)
+enr_multi <- fetch_enr_multi(2020:2024, use_cache = TRUE)
 
 # Calculate county totals over time
 county_trends <- enr_multi |>
@@ -123,7 +123,7 @@ ggplot(county_trends, aes(x = end_year, y = enrollment, color = county_name)) +
 
 ```{r}
 # Get state-level enrollment by grade
-enr_2024 <- fetch_enr(2024)
+enr_2024 <- fetch_enr(2024, use_cache = TRUE)
 state_grades <- enr_2024 |>
   filter(county_name == "State Total", grade != "TOTAL") |>
   mutate(grade = factor(grade, levels = c("PK", "K", sprintf("%02d", 1:12), "SPED")))
@@ -191,7 +191,7 @@ A Python package is also available for accessing the same data:
 
 from hischooldata import fetch_enr
 
-df = fetch_enr(2024)
+df = fetch_enr(2024, use_cache = TRUE)
 print(df.head())
 ```
 
