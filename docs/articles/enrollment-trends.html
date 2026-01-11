@@ -96,8 +96,8 @@
 <span></span>
 <span><span class="co"># Fetch data for the last 10 available years</span></span>
 <span><span class="va">year_range</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://generics.r-lib.org/reference/setops.html" class="external-link">intersect</a></span><span class="op">(</span><span class="op">(</span><span class="va">max_year</span> <span class="op">-</span> <span class="fl">9</span><span class="op">)</span><span class="op">:</span><span class="va">max_year</span>, <span class="va">years</span><span class="op">$</span><span class="va">years</span><span class="op">)</span></span>
-<span><span class="va">enr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fetch_enr_multi.html">fetch_enr_multi</a></span><span class="op">(</span><span class="va">year_range</span><span class="op">)</span></span>
-<span><span class="va">enr_current</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fetch_enr.html">fetch_enr</a></span><span class="op">(</span><span class="va">max_year</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">enr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fetch_enr_multi.html">fetch_enr_multi</a></span><span class="op">(</span><span class="va">year_range</span>, use_cache <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">enr_current</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fetch_enr.html">fetch_enr</a></span><span class="op">(</span><span class="va">max_year</span>, use_cache <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="hawaii-is-americas-only-statewide-school-district">1. Hawaii is America’s only statewide school district<a class="anchor" aria-label="anchor" href="#hawaii-is-americas-only-statewide-school-district"></a>
 </h2>

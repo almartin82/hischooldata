@@ -35,8 +35,8 @@ if (is.list(years)) {
 
 # Fetch data for the last 10 available years
 year_range <- intersect((max_year - 9):max_year, years$years)
-enr <- fetch_enr_multi(year_range)
-enr_current <- fetch_enr(max_year)
+enr <- fetch_enr_multi(year_range, use_cache = TRUE)
+enr_current <- fetch_enr(max_year, use_cache = TRUE)
 ```
 
 ## 1. Hawaii is America’s only statewide school district

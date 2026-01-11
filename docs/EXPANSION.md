@@ -1,336 +1,332 @@
 # Hawaii School Data Expansion Research
 
-**Last Updated:** 2026-01-04 **Theme Researched:** Graduation Rates
-
-## Current Package Status
-
-- **R-CMD-check:** Passing
-- **Python tests:** Passing
-- **pkgdown:** Passing
-
-## Current Package Capabilities
-
-The `hischooldata` package currently supports: - **Enrollment data
-only** via
-[`fetch_enr()`](https://almartin82.github.io/hischooldata/reference/fetch_enr.md)
-and
-[`fetch_enr_multi()`](https://almartin82.github.io/hischooldata/reference/fetch_enr_multi.md) -
-**Years:** 2011-2025 (2012 not available - no 2011 Data Book) - **Data
-sources:** DBEDT State Data Book, HIDOE official enrollment files -
-**Aggregation levels:** State total, County (Honolulu, Hawaii County,
-Maui, Kauai), Charter Schools
-
-**No graduation rate functions currently exist.**
-
-------------------------------------------------------------------------
+**Last Updated:** 2026-01-11 **Theme Researched:** Assessment (K-8 and
+High School, excluding SAT/ACT)
 
 ## Data Sources Found
 
-### Source 1: Hawaii P-20 CCRI (College and Career Readiness Indicators)
-
-**PRIMARY RECOMMENDED SOURCE**
+### Source 1: Strive HI Master Data Files (2013-14, 2014-15) ⭐ PRIMARY SOURCE
 
 - **URL:**
-  <https://www.hawaiidxp.org/wp-content/uploads/2025/03/CCRI_Data_2020-2021-2022-2023-2024-Public_Final.xlsx>
-- **HTTP Status:** 200 OK
+  <https://www.hawaiipublicschools.org/DOE%20Forms/StriveHI2014/2013-14MasterDataFile.xlsx>
+- **URL:**
+  <https://www.hawaiipublicschools.org/DOE%20Forms/StriveHI2015/2014-15MasterDataFile.xlsx>
+- **HTTP Status:** 200 (both files verified accessible)
 - **Format:** Excel (.xlsx)
-- **Years Available:** 2020-2024 (Class of)
-- **Access Method:** Direct download
-- **Update Frequency:** Annual (March release)
-- **Data Level:** School-level
+- **Years Available:** 2013-14, 2014-15 ONLY
+- **Access:** Direct download, no authentication required
+- **Assessment Types:** Math, Reading, Science proficiency percentages
+- **Notes:** These are the ONLY raw assessment data files found in Excel
+  format
 
-**Key Fields:** \| Field \| Description \| \|——-\|————-\| \| GradYr \|
-Graduation year (2020-2024) \| \| SchCode \| DOE school code (3-digit)
-\| \| CCRI_SchoolName \| School name \| \| ComplexArea \| Geographic
-cluster (15 complex areas) \| \| Island \| Oahu, Hawaii, Maui, Kauai,
-Molokai, Lanai \| \| County \| County name \| \| Completers \| Number of
-high school completers \| \| OnTimeGrad \| 4-year Adjusted Cohort
-Graduation Rate (ACGR) as decimal (e.g., 0.86) \| \| Honors_Cert_Pct \|
-Percent earning honors certificate \| \| NSC_Fall_Pct \| Percent
-enrolling in postsecondary \|
-
-**Notes:** - Redacted values marked with `*` when counts \< 10 -
-Contains 65-68 schools per year - Does NOT include subgroup breakdowns
-(no race, SPED, ELL, FRPL) - Decimal format (0.86 = 86%)
-
-### Source 2: DBEDT State Data Book (Table 3.15)
-
-**SECONDARY SOURCE - Graduation COUNTS (not rates)**
-
-- **URL Pattern:**
-  `https://files.hawaii.gov/dbedt/economic/databook/{YEAR}-individual/03/0315{YY}.xls`
-- **HTTP Status:** 200 OK for all years except 2011 (404)
-- **Format:** Excel (.xls)
-- **Years Available:** 1990-2022 (via 2024 Data Book)
-- **Access Method:** Direct download
-- **Data Level:** State aggregate only
-
-**Available Years (HTTP 200):** \| Data Book Year \| HTTP Status \| URL
-\| \|—————-\|————-\|—–\| \| 2010 \| 200 \|
-<https://files.hawaii.gov/dbedt/economic/databook/2010-individual/03/031510.xls>
-\| \| 2011 \| 404 \| Not available \| \| 2013 \| 200 \|
-<https://files.hawaii.gov/dbedt/economic/databook/2013-individual/03/031513.xls>
-\| \| 2014-2024 \| 200 \| Pattern: `0315{YY}.xls` \|
-
-**Data Fields:** - Year - Total graduates (public + private) - Public
-school graduates - Private school graduates
-
-**Limitations:** - Counts only, not graduation RATES - State-level only
-(no school or district breakdown) - No subgroup data
-
-### Source 3: Strive HI State Reports
+### Source 2: Strive HI School Classification Files
 
 - **URL:**
-  <https://hawaiipublicschools.org/wp-content/uploads/Strive-HI-State-Report-2025.pdf>
-- **HTTP Status:** 200 OK
-- **Format:** PDF (not machine-readable)
-- **Years Available:** 2020-21 through 2024-25
-- **Data Level:** State aggregate
+  <https://www.hawaiipublicschools.org/DOE%20Forms/StriveHI2014/2013-14SchoolClassification.xlsx>
+- **URL:**
+  <https://www.hawaiipublicschools.org/DOE%20Forms/StriveHI2015/2014-15SchoolClassification.xlsx>
+- **HTTP Status:** 200 (verified)
+- **Format:** Excel (.xlsx)
+- **Years:** 2013-14, 2014-15
+- **Content:** School classifications, index scores, Title I status
+- **Notes:** Contains less detailed assessment data than Master Data
+  Files
 
-**Graduation Rate Data in Strive HI:** \| Class Year \| On-Time Grad
-Rate \| \|————\|——————-\| \| 2021 \| 86% \| \| 2022 \| 85% \| \| 2023 \|
-86% \| \| 2024 \| 86% \| \| 2025 (prelim) \| 86% \|
+### Source 3: ARCH (Accountability Resource Center Hawaii)
 
-**Limitations:** - PDF format - requires manual extraction - State-level
-only - No school-level breakdown in PDF
+- **URL:** <https://arch.k12.hi.us/reports/strivehi-performance>
+- **HTTP Status:** 200
+- **Format:** Interactive JavaScript dashboard
+- **Years:** Unknown (current year + limited history)
+- **Access:** Web interface only, NO API or export functionality found
+- **Notes:** Primary reporting platform but NOT programmatic-accessible
 
-### Source 4: ARCH ADC (Accountability Data Center)
+### Source 4: HIDOE Data Book
 
-- **URL:** <https://adc.hidoe.us>
-- **HTTP Status:** 200 (JavaScript required)
-- **Format:** Interactive dashboard
-- **Access Method:** Web application (JavaScript required)
+- **URL:** <https://arch.k12.hi.us/reports/hidoe-data-book>
+- **Format:** PDF reports with summary statistics
+- **Years:** Annual (2024 confirmed, likely earlier years exist)
+- **Access:** Public download
+- **Notes:** Contains assessment summary tables but NOT raw school-level
+  data
 
-**Notes:** - Contains school-level Strive HI data - Graduation rates by
-subgroup (race, SPED, ELL, economically disadvantaged) - No direct
-downloadable files found - May require API exploration or scraping
+### Source 5: ESSA Report Cards
 
-### Source 5: LEI Kukui / ESSA Data Portal
-
-- **URL:** <https://hidoedata.org>
-- **HTTP Status:** 302 redirect to dashboard
-- **Format:** Interactive dashboard
-- **Access Method:** Web application (JavaScript required)
-
-**Notes:** - ESSA compliance data reporting - Graduation rates by
-subgroup available in dashboard - No bulk download option found
-
-------------------------------------------------------------------------
+- **URL:** <https://arch.k12.hi.us/reports/essa>
+- **Format:** PDF reports (annual)
+- **Years:** 2017-present (ESSA requirement)
+- **Access:** Public download
+- **Notes:** Federal accountability reports with aggregated assessment
+  data
 
 ## Schema Analysis
 
-### CCRI Data Schema (2020-2024)
+### Master Data File Structure (2013-14, 2014-15)
 
-**Column Names (consistent across all years):**
+#### Column Names:
 
-    GradYr, SchCode, CCRI_SchoolName, ComplexArea, Island, County,
-    Completers_Redact, Completers, Honors_Cert_Redact, Honors_Cert_Pct,
-    OnTimeGrad_Redact, OnTimeGrad, [86 total columns]
+    - School ID
+    - Year
+    - School Name
+    - School Type for Strive HI (Elementary/Middle/High)
+    - Title I (Yes/No)
+    - Complex Area
+    - Strive HI Step (Recognition/Continuous Improvement/Focus/Priority)
+    - Final Index Score (0-400 points)
+    - Math Proficiency (%)
+    - Math Participation Penalty?
+    - Math Proficiency - Pooled Data?
+    - Reading Proficiency (%)
+    - Reading Participation Penalty?
+    - Reading Proficiency - Pooled Data?
+    - Science Proficiency (%)
+    - Science Participation Penalty?
+    - Science Proficiency - Pooled Data?
+    - Math Median SGP (Student Growth Percentile)
+    - Math SGP - Used Pooled Data
+    - Reading Median SGP
+    - Reading SGP - Used Pooled Data
 
-**ID System:** - School Code: 3-digit numeric (e.g., 103, 106, 220) - No
-district ID (Hawaii is single statewide district) - Complex Area: Text
-string (15 areas)
+#### Key Schema Features:
 
-**Data Quality Notes:** - Redacted cells have `*` in corresponding
-`_Redact` column - Graduation rates as decimals (0.00-1.00) - Completers
-count includes diploma + Certificate of Completion
+- **School-level data** (not student-level)
+- **Percentages rounded to nearest integer**
+- **Pooled data flags** indicate multi-year averaging for small schools
+- **Participation penalties** applied when \<95% tested
+- **Growth measures** included (SGP - Student Growth Percentile)
+- **Index score** calculated from multiple indicators
 
-### DBEDT Data Schema
+#### ID System:
 
-**Header Structure:** - Row 1: Table title - Row 2-5: Notes/blank - Row
-6: Column headers (Year, Total graduates, Public school graduates,
-Private school graduates) - Row 7: Blank - Row 8+: Data rows
+- School ID: Numeric identifier (format needs verification from actual
+  data rows)
+- Complex Area: Geographic grouping of schools
+- No district ID (Hawaii is single statewide district)
 
-**Known Issues:** - Multi-row header requires skip logic - Year column
-is text, needs conversion to numeric
+### Known Data Issues:
 
-------------------------------------------------------------------------
+1.  **Data suppression** for small schools (pooled data used)
+2.  **Rounding to integers** (precision loss)
+3.  **Index calculation artifacts** - some values may not match
+    published data
+4.  **Participation penalties** can affect proficiencies
+5.  **Limited year coverage** - only 2 years of raw data found
+
+## Critical Blocker
+
+**NO RAW ASSESSMENT DATA AVAILABLE FOR 2015-16 TO PRESENT**
+
+After extensive searching, only TWO years of downloadable assessment
+data exist: - 2013-14 (Master Data File) - 2014-15 (Master Data File)
+
+**All subsequent years (2015-16 through present) are only available
+through:** 1. **ARCH Dashboard** - JavaScript-rendered, no export option
+2. **PDF Reports** - Summary tables, not raw data 3. **School report
+cards** - Individual school PDFs
+
+### Why This Matters:
+
+- Hawaii stopped publishing Master Data Files after 2014-15
+- Transitioned to ARCH dashboard (web-only access)
+- No API identified
+- No bulk download option found
+- Web scraping may violate ToS and is fragile
 
 ## Time Series Heuristics
 
-### Expected Ranges
+Based on 2013-14 and 2014-15 Master Data Files:
 
-| Metric                   | Expected Range  | Red Flag If           |
-|--------------------------|-----------------|-----------------------|
-| State graduation rate    | 82% - 90%       | Outside this range    |
-| YoY change               | \< 3%           | Change \> 5%          |
-| Total completers (state) | 10,000 - 13,000 | \< 9,000 or \> 15,000 |
-| Schools with data        | 60 - 70         | \< 55                 |
+### Expected Ranges:
 
-### Verified Values for Fidelity Tests
+- **Schools:** ~290 schools (traditional + charter)
+- **Math Proficiency:** 30-60% typical (varies by grade/subject)
+- **Reading Proficiency:** 40-70% typical
+- **Science Proficiency:** 30-50% typical
+- **Participation Rate:** 95%+ required (penalties if lower)
+- **Index Score:** 0-400 points
 
-From CCRI 2020-2024 data: \| School \| Year \| OnTimeGrad \| Completers
-\| \|——–\|——\|————\|————\| \| Farrington High School \| 2024 \| 0.73 \|
-438 \| \| Kaimuki High School \| 2024 \| 0.79 \| 130 \| \| Kalani High
-School \| 2024 \| (verify) \| (verify) \|
+### State Total Expectations (2013-14 data needed):
 
-From Strive HI: \| Class Year \| State Rate \| \|————\|————\| \| 2024 \|
-86% \| \| 2023 \| 86% \| \| 2022 \| 85% \| \| 2021 \| 86% \|
+- Total students tested: ~180,000
+- Proficiency percentages vary by subject
+- All schools should have data (except very small charter schools)
 
-------------------------------------------------------------------------
+### Major Entities:
 
-## Missing Data / Gaps
-
-### What Is Available
-
-- School-level graduation rates (ACGR): 2020-2024 via CCRI
-- State-level graduation rates: 2021-2025 via Strive HI
-- Graduation counts: 1990-2022 via DBEDT
-
-### What Is NOT Available (Downloadable)
-
-- **Subgroup graduation rates** (race/ethnicity, SPED, ELL, economically
-  disadvantaged)
-  - Available in ARCH ADC dashboard but not downloadable
-  - Would require web scraping or API discovery
-- **Years before 2020** for school-level ACGR rates
-- **Extended completion rates** (5-year rates) at school level
-
-### Potential Future Sources
-
-- ARCH ADC API (if available)
-- HIDOE data request
-- Older CCRI files (2015-2019) - URLs appear to be removed/migrated
-
-------------------------------------------------------------------------
+- No traditional districts (Hawaii is single district)
+- Complex Areas: ~15-20 geographic groupings
+- School types: Elementary, Middle, High, K-12, K-8, etc.
 
 ## Recommended Implementation
 
-### Priority: **MEDIUM**
+### Priority: **MEDIUM** (Limited Data Availability)
 
-### Complexity: **EASY** (for CCRI data)
+### Complexity: **EASY** (for 2 years) / **BLOCKED** (for 2015-16 to present)
 
-### Estimated Files to Modify: 3-4
+### Estimated Files to Modify: 8-10
 
-### Implementation Approach
+### What Can Be Implemented:
 
-**Phase 1: CCRI-based graduation rates (Recommended)**
+**Option 1: Implement 2-Year Assessment Dataset (RECOMMENDED)**
 
-Add functions to fetch and process CCRI data:
+Implement assessment data for the ONLY 2 years with raw data (2013-14,
+2014-15):
 
-1.  `get_raw_grad()` - Download CCRI Excel file
-2.  `fetch_grad()` - Return school-level graduation data
-3.  `fetch_grad_multi()` - Multi-year convenience function
+**Pros:** - Clean, raw Excel data with school-level detail - Math,
+Reading, Science proficiency percentages - Student Growth Percentiles
+(SGP) - Implementation straightforward - No web scraping needed
 
-**Proposed Output Schema:**
+**Cons:** - Only 2 years of data (2013-14, 2014-15) - Not useful for
+trend analysis - May confuse users expecting recent data
 
-``` r
-tibble(
-  end_year = integer(),      # Graduation year
-  school_code = character(), # 3-digit school code
-  school_name = character(),
-  complex_area = character(),
-  island = character(),
-  county = character(),
-  completers = integer(),    # Number of completers
-  grad_rate = numeric(),     # On-time graduation rate (decimal)
-  honors_pct = numeric()     # Percent with honors (optional)
-)
-```
+**Files to Create:** 1. `R/get_raw_assessment.R` - Download Master Data
+Files 2. `R/process_assessment.R` - Parse Excel files 3.
+`R/tidy_assessment.R` - Transform to tidy format 4.
+`R/fetch_assessment.R` - User-facing function 5.
+`tests/testthat/test-assessment-pipeline-live.R` - LIVE tests 6.
+`tests/testthat/test-assessment-fidelity.R` - Fidelity tests 7.
+`vignettes/assessment-trends.Rmd` - Documentation 8.
+`man/fetch_assessment.Rd` - Function documentation
 
-**Phase 2: DBEDT graduation counts (Optional)**
+**Estimated Implementation Time:** 4-6 hours
 
-Add functions to fetch historical graduate counts:
+**Option 2: Contact HIDOE for Data Access (RECOMMENDED FOR FULL
+IMPLEMENTATION)**
 
-1.  `get_raw_grad_counts()` - Download DBEDT Table 3.15
-2.  `fetch_grad_counts()` - Return state-level graduate counts
+Before implementing, contact Hawaii DOE Research & Evaluation Office:
 
-------------------------------------------------------------------------
+**Ask for:** - Historical Master Data Files for 2015-16 to present - API
+access to ARCH data - Bulk data download option - Automated data access
+method
+
+**Contact:** - Hawaii DOE Research & Data Requests:
+<https://hawaiipublicschools.org/data-reports/research-and-data-requests/> -
+Data Request Form:
+<https://www.hawaiipublicschools.org/DOE%20Forms/DataGov/DataRequestForm.xlsx>
+
+**Option 3: Web Scraping ARCH Dashboard (NOT RECOMMENDED)**
+
+**Challenges:** - JavaScript-rendered content (requires
+Selenium/Playwright) - No documented API - May violate Terms of
+Service - Extremely fragile (breaks when site changes) - No guarantee of
+historical data access - Ethical/legal concerns
+
+**Recommendation:** DO NOT pursue without explicit HIDOE permission
 
 ## Test Requirements
 
-### Raw Data Fidelity Tests Needed
+### Raw Data Fidelity Tests Needed:
+
+**2013-14 Data:**
 
 ``` r
-test_that("2024 CCRI: Farrington graduation rate matches raw", {
+test_that("2013-14: State total Math proficiency matches raw Excel", {
   skip_if_offline()
-  data <- fetch_grad(2024)
-  farrington <- data |> filter(school_code == "106")
-  expect_equal(farrington$grad_rate, 0.73, tolerance = 0.01)
-  expect_equal(farrington$completers, 438)
-})
 
-test_that("2024 CCRI: State average is approximately 86%", {
-  skip_if_offline()
-  data <- fetch_grad(2024)
-  weighted_avg <- sum(data$completers * data$grad_rate) / sum(data$completers)
-  expect_equal(weighted_avg, 0.86, tolerance = 0.02)
+  data <- fetch_assessment(2014, subject = "math")
+
+  # Verify against manually checked value from Master Data File
+  # (Need to download and verify actual value)
+  expect_equal(nrow(data), 290, tolerance = 5)  # ~290 schools
 })
 ```
 
-### Data Quality Checks
+**2014-15 Data:**
 
 ``` r
-test_that("Graduation rates are valid percentages", {
-  data <- fetch_grad(2024)
-  expect_true(all(data$grad_rate >= 0 & data$grad_rate <= 1, na.rm = TRUE))
-})
+test_that("2014-15: Specific school proficiency matches raw Excel", {
+  skip_if_offline()
 
-test_that("Completers are positive integers", {
-  data <- fetch_grad(2024)
-  expect_true(all(data$completers > 0, na.rm = TRUE))
-})
+  data <- fetch_assessment(2015, subject = "math")
 
-test_that("All years have 60+ schools", {
-  for (yr in 2020:2024) {
-    data <- fetch_grad(yr)
-    expect_gte(nrow(data), 60, info = paste("Year:", yr))
-  }
+  # Verify known school (e.g., 'Aiea High School')
+  aiea <- data %>% filter(school_name == "Aiea High School")
+  # (Need to check actual value in Excel file)
+  expect_true(aiea$math_proficiency >= 0 & aiea$math_proficiency <= 100)
 })
 ```
 
+### Data Quality Checks:
+
+- All proficiency percentages between 0-100
+- No negative values
+- All schools have School ID
+- No duplicate school-year combinations
+- All years have data (2013-14, 2014-15)
+- Major complex areas present
+- Participation penalty flags are boolean
+
+## Implementation Decision Matrix
+
+| Factor              | Option 1 (2 Years Only) | Option 2 (Request Data) | Option 3 (Scraping) |
+|---------------------|-------------------------|-------------------------|---------------------|
+| Data completeness   | 2 years                 | Unknown                 | Potentially full    |
+| Implementation ease | Easy                    | N/A (contact)           | Hard                |
+| Maintenance burden  | Low                     | Low                     | High                |
+| Legal/ethical risk  | None                    | None                    | High                |
+| User value          | Limited                 | High                    | Medium              |
+| Reliability         | High                    | Unknown                 | Low                 |
+
+## Final Recommendation
+
+**Recommended Approach: Two-Phase Implementation**
+
+### Phase 1: Quick Win (Implement 2-Year Dataset)
+
+1.  Implement assessment functions for 2013-14 and 2014-15 ONLY
+2.  Clearly document limitation: “Only 2 years of raw assessment data
+    available”
+3.  Add note: “Contact HIDOE for recent years (2015-16 to present)”
+4.  Implement with standard tests and documentation
+5.  Estimated time: 4-6 hours
+
+### Phase 2: Data Access Request
+
+1.  Submit formal data request to Hawaii DOE
+2.  Ask for Master Data Files for 2015-16 to present
+3.  Inquire about API access to ARCH
+4.  If successful, extend implementation to all years
+
+### Alternative: Prioritize Different Theme
+
+Given the severe data limitation (only 2 years), consider prioritizing a
+different data theme with better availability: - **Demographics**
+(race/ethnicity) - may be in enrollment files - **ELL/SPED/FRPL** -
+subgroup data in enrollment - **Attendance** - chronic absenteeism in
+ARCH (same limitation) - **Graduation** - may have better historical
+data
+
+## Conclusion
+
+**Hawaii assessment data implementation is SEVERELY LIMITED** due to: 1.
+Only 2 years of raw data (2013-14, 2014-15) 2. No public data access for
+2015-16 to present 3. ARCH dashboard not programmatic-accessible 4. Web
+scraping not recommended without permission
+
+**Can implement:** 2-year assessment dataset (2013-14, 2014-15) **Cannot
+implement:** Multi-year trends, recent data
+
+**Recommendation:** - Implement 2-year dataset if user accepts
+limitation - OR prioritize different data theme with better
+availability - OR contact HIDOE for full historical data access
+
 ------------------------------------------------------------------------
 
-## Implementation Steps
+**Research Status:** LIMITED DATA AVAILABILITY - Only 2 years found
+**Confidence Level:** HIGH - Thorough search of official HIDOE sources
+**Last Reviewer:** Claude (expand-state skill) **Date:** 2026-01-11
 
-1.  Create `R/get_raw_graduation.R`:
+## Sources
 
-    - `get_ccri_url()` - Generate CCRI download URL
-    - `download_ccri_data()` - Download and cache CCRI Excel
-    - `get_raw_grad()` - Parse CCRI Excel to data frame
-
-2.  Create `R/fetch_graduation.R`:
-
-    - `fetch_grad()` - Main user-facing function
-    - `fetch_grad_multi()` - Multi-year fetch
-
-3.  Create `tests/testthat/test-graduation-live.R`:
-
-    - URL availability tests
-    - Download tests
-    - Parsing tests
-    - Fidelity tests
-    - Data quality tests
-
-4.  Update `NAMESPACE` and documentation
-
-5.  Update `DESCRIPTION` (no new dependencies needed)
-
-------------------------------------------------------------------------
-
-## Open Questions
-
-1.  **CCRI file URL stability**: The file is at
-    `/wp-content/uploads/2025/03/...` - will this URL change annually?
-    - Recommendation: Check for URL pattern or search page for latest
-      file
-2.  **Subgroup data**: Should we pursue ARCH ADC scraping for subgroup
-    graduation rates?
-    - This would add significant complexity
-3.  **Historical data**: Should we attempt to recover 2015-2019 CCRI
-    data?
-    - Would require reaching out to Hawaii P-20 or searching archives
-4.  **Extended completion**: Should we include 5-year extended
-    completion rate?
-    - Available in CCRI data but unclear if useful
-
-------------------------------------------------------------------------
-
-## References
-
-- Hawaii DXP CCRI:
-  <https://www.hawaiidxp.org/data-products/college-and-career-readiness-indicators/>
-- DBEDT Data Book: <https://dbedt.hawaii.gov/economic/databook/>
-- Strive HI Dashboard:
-  <https://hawaiipublicschools.org/about/organization/strive-hi-dashboard/>
-- ARCH ADC: <https://adc.hidoe.us>
+- [Hawaii Strive HI Performance
+  System](https://arch.k12.hi.us/reports/strivehi-performance)
+- [Hawaii Public Schools School
+  Reports](https://hawaiipublicschools.org/data-reports/school-reports/)
+- [Hawaii DOE Research and Data
+  Requests](https://hawaiipublicschools.org/data-reports/research-and-data-requests/)
+- [2013-14 Master Data File
+  (Excel)](https://www.hawaiipublicschools.org/DOE%20Forms/StriveHI2014/2013-14MasterDataFile.xlsx)
+- [2014-15 Master Data File
+  (Excel)](https://www.hawaiipublicschools.org/DOE%20Forms/StriveHI2015/2014-15MasterDataFile.xlsx)
+- [Hawaii Strive HI Technical
+  Guides](https://www.hawaiipublicschools.org/DOE%20Forms/StriveHI2023/StriveHITechnicalGuide2023.pdf)
