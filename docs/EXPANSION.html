@@ -38,319 +38,338 @@
 
 <div id="hawaii-school-data-expansion-research" class="section level1">
 
-<p><strong>Last Updated:</strong> 2026-01-04 <strong>Theme Researched:</strong> Graduation Rates</p>
-<div class="section level2">
-<h2 id="current-package-status">Current Package Status<a class="anchor" aria-label="anchor" href="#current-package-status"></a></h2>
-<ul><li>
-<strong>R-CMD-check:</strong> Passing</li>
-<li>
-<strong>Python tests:</strong> Passing</li>
-<li>
-<strong>pkgdown:</strong> Passing</li>
-</ul></div>
-<div class="section level2">
-<h2 id="current-package-capabilities">Current Package Capabilities<a class="anchor" aria-label="anchor" href="#current-package-capabilities"></a></h2>
-<p>The <code>hischooldata</code> package currently supports: - <strong>Enrollment data only</strong> via <code><a href="reference/fetch_enr.html">fetch_enr()</a></code> and <code><a href="reference/fetch_enr_multi.html">fetch_enr_multi()</a></code> - <strong>Years:</strong> 2011-2025 (2012 not available - no 2011 Data Book) - <strong>Data sources:</strong> DBEDT State Data Book, HIDOE official enrollment files - <strong>Aggregation levels:</strong> State total, County (Honolulu, Hawaii County, Maui, Kauai), Charter Schools</p>
-<p><strong>No graduation rate functions currently exist.</strong></p>
-<hr></div>
+<p><strong>Last Updated:</strong> 2026-01-11 <strong>Theme Researched:</strong> Assessment (K-8 and High School, excluding SAT/ACT)</p>
 <div class="section level2">
 <h2 id="data-sources-found">Data Sources Found<a class="anchor" aria-label="anchor" href="#data-sources-found"></a></h2>
 <div class="section level3">
-<h3 id="source-1-hawaii-p-20-ccri-college-and-career-readiness-indicators">Source 1: Hawaii P-20 CCRI (College and Career Readiness Indicators)<a class="anchor" aria-label="anchor" href="#source-1-hawaii-p-20-ccri-college-and-career-readiness-indicators"></a></h3>
-<p><strong>PRIMARY RECOMMENDED SOURCE</strong></p>
+<h3 id="source-1-strive-hi-master-data-files-2013-14-2014-15--primary-source">Source 1: Strive HI Master Data Files (2013-14, 2014-15) ⭐ PRIMARY SOURCE<a class="anchor" aria-label="anchor" href="#source-1-strive-hi-master-data-files-2013-14-2014-15--primary-source"></a></h3>
 <ul><li>
-<strong>URL:</strong> <a href="https://www.hawaiidxp.org/wp-content/uploads/2025/03/CCRI_Data_2020-2021-2022-2023-2024-Public_Final.xlsx" class="external-link uri">https://www.hawaiidxp.org/wp-content/uploads/2025/03/CCRI_Data_2020-2021-2022-2023-2024-Public_Final.xlsx</a>
+<strong>URL:</strong> <a href="https://www.hawaiipublicschools.org/DOE%20Forms/StriveHI2014/2013-14MasterDataFile.xlsx" class="external-link uri">https://www.hawaiipublicschools.org/DOE%20Forms/StriveHI2014/2013-14MasterDataFile.xlsx</a>
 </li>
 <li>
-<strong>HTTP Status:</strong> 200 OK</li>
+<strong>URL:</strong> <a href="https://www.hawaiipublicschools.org/DOE%20Forms/StriveHI2015/2014-15MasterDataFile.xlsx" class="external-link uri">https://www.hawaiipublicschools.org/DOE%20Forms/StriveHI2015/2014-15MasterDataFile.xlsx</a>
+</li>
+<li>
+<strong>HTTP Status:</strong> 200 (both files verified accessible)</li>
 <li>
 <strong>Format:</strong> Excel (.xlsx)</li>
 <li>
-<strong>Years Available:</strong> 2020-2024 (Class of)</li>
+<strong>Years Available:</strong> 2013-14, 2014-15 ONLY</li>
 <li>
-<strong>Access Method:</strong> Direct download</li>
+<strong>Access:</strong> Direct download, no authentication required</li>
 <li>
-<strong>Update Frequency:</strong> Annual (March release)</li>
+<strong>Assessment Types:</strong> Math, Reading, Science proficiency percentages</li>
 <li>
-<strong>Data Level:</strong> School-level</li>
-</ul><p><strong>Key Fields:</strong> | Field | Description | |——-|————-| | GradYr | Graduation year (2020-2024) | | SchCode | DOE school code (3-digit) | | CCRI_SchoolName | School name | | ComplexArea | Geographic cluster (15 complex areas) | | Island | Oahu, Hawaii, Maui, Kauai, Molokai, Lanai | | County | County name | | Completers | Number of high school completers | | OnTimeGrad | 4-year Adjusted Cohort Graduation Rate (ACGR) as decimal (e.g., 0.86) | | Honors_Cert_Pct | Percent earning honors certificate | | NSC_Fall_Pct | Percent enrolling in postsecondary |</p>
-<p><strong>Notes:</strong> - Redacted values marked with <code>*</code> when counts &lt; 10 - Contains 65-68 schools per year - Does NOT include subgroup breakdowns (no race, SPED, ELL, FRPL) - Decimal format (0.86 = 86%)</p>
-</div>
+<strong>Notes:</strong> These are the ONLY raw assessment data files found in Excel format</li>
+</ul></div>
 <div class="section level3">
-<h3 id="source-2-dbedt-state-data-book-table-315">Source 2: DBEDT State Data Book (Table 3.15)<a class="anchor" aria-label="anchor" href="#source-2-dbedt-state-data-book-table-315"></a></h3>
-<p><strong>SECONDARY SOURCE - Graduation COUNTS (not rates)</strong></p>
+<h3 id="source-2-strive-hi-school-classification-files">Source 2: Strive HI School Classification Files<a class="anchor" aria-label="anchor" href="#source-2-strive-hi-school-classification-files"></a></h3>
 <ul><li>
-<strong>URL Pattern:</strong> <code>https://files.hawaii.gov/dbedt/economic/databook/{YEAR}-individual/03/0315{YY}.xls</code>
+<strong>URL:</strong> <a href="https://www.hawaiipublicschools.org/DOE%20Forms/StriveHI2014/2013-14SchoolClassification.xlsx" class="external-link uri">https://www.hawaiipublicschools.org/DOE%20Forms/StriveHI2014/2013-14SchoolClassification.xlsx</a>
 </li>
 <li>
-<strong>HTTP Status:</strong> 200 OK for all years except 2011 (404)</li>
-<li>
-<strong>Format:</strong> Excel (.xls)</li>
-<li>
-<strong>Years Available:</strong> 1990-2022 (via 2024 Data Book)</li>
-<li>
-<strong>Access Method:</strong> Direct download</li>
-<li>
-<strong>Data Level:</strong> State aggregate only</li>
-</ul><p><strong>Available Years (HTTP 200):</strong> | Data Book Year | HTTP Status | URL | |—————-|————-|—–| | 2010 | 200 | <a href="https://files.hawaii.gov/dbedt/economic/databook/2010-individual/03/031510.xls" class="external-link uri">https://files.hawaii.gov/dbedt/economic/databook/2010-individual/03/031510.xls</a> | | 2011 | 404 | Not available | | 2013 | 200 | <a href="https://files.hawaii.gov/dbedt/economic/databook/2013-individual/03/031513.xls" class="external-link uri">https://files.hawaii.gov/dbedt/economic/databook/2013-individual/03/031513.xls</a> | | 2014-2024 | 200 | Pattern: <code>0315{YY}.xls</code> |</p>
-<p><strong>Data Fields:</strong> - Year - Total graduates (public + private) - Public school graduates - Private school graduates</p>
-<p><strong>Limitations:</strong> - Counts only, not graduation RATES - State-level only (no school or district breakdown) - No subgroup data</p>
-</div>
-<div class="section level3">
-<h3 id="source-3-strive-hi-state-reports">Source 3: Strive HI State Reports<a class="anchor" aria-label="anchor" href="#source-3-strive-hi-state-reports"></a></h3>
-<ul><li>
-<strong>URL:</strong> <a href="https://hawaiipublicschools.org/wp-content/uploads/Strive-HI-State-Report-2025.pdf" class="external-link uri">https://hawaiipublicschools.org/wp-content/uploads/Strive-HI-State-Report-2025.pdf</a>
+<strong>URL:</strong> <a href="https://www.hawaiipublicschools.org/DOE%20Forms/StriveHI2015/2014-15SchoolClassification.xlsx" class="external-link uri">https://www.hawaiipublicschools.org/DOE%20Forms/StriveHI2015/2014-15SchoolClassification.xlsx</a>
 </li>
 <li>
-<strong>HTTP Status:</strong> 200 OK</li>
+<strong>HTTP Status:</strong> 200 (verified)</li>
 <li>
-<strong>Format:</strong> PDF (not machine-readable)</li>
+<strong>Format:</strong> Excel (.xlsx)</li>
 <li>
-<strong>Years Available:</strong> 2020-21 through 2024-25</li>
+<strong>Years:</strong> 2013-14, 2014-15</li>
 <li>
-<strong>Data Level:</strong> State aggregate</li>
-</ul><p><strong>Graduation Rate Data in Strive HI:</strong> | Class Year | On-Time Grad Rate | |————|——————-| | 2021 | 86% | | 2022 | 85% | | 2023 | 86% | | 2024 | 86% | | 2025 (prelim) | 86% |</p>
-<p><strong>Limitations:</strong> - PDF format - requires manual extraction - State-level only - No school-level breakdown in PDF</p>
-</div>
+<strong>Content:</strong> School classifications, index scores, Title I status</li>
+<li>
+<strong>Notes:</strong> Contains less detailed assessment data than Master Data Files</li>
+</ul></div>
 <div class="section level3">
-<h3 id="source-4-arch-adc-accountability-data-center">Source 4: ARCH ADC (Accountability Data Center)<a class="anchor" aria-label="anchor" href="#source-4-arch-adc-accountability-data-center"></a></h3>
+<h3 id="source-3-arch-accountability-resource-center-hawaii">Source 3: ARCH (Accountability Resource Center Hawaii)<a class="anchor" aria-label="anchor" href="#source-3-arch-accountability-resource-center-hawaii"></a></h3>
 <ul><li>
-<strong>URL:</strong> <a href="https://adc.hidoe.us" class="external-link uri">https://adc.hidoe.us</a>
+<strong>URL:</strong> <a href="https://arch.k12.hi.us/reports/strivehi-performance" class="external-link uri">https://arch.k12.hi.us/reports/strivehi-performance</a>
 </li>
 <li>
-<strong>HTTP Status:</strong> 200 (JavaScript required)</li>
+<strong>HTTP Status:</strong> 200</li>
 <li>
-<strong>Format:</strong> Interactive dashboard</li>
+<strong>Format:</strong> Interactive JavaScript dashboard</li>
 <li>
-<strong>Access Method:</strong> Web application (JavaScript required)</li>
-</ul><p><strong>Notes:</strong> - Contains school-level Strive HI data - Graduation rates by subgroup (race, SPED, ELL, economically disadvantaged) - No direct downloadable files found - May require API exploration or scraping</p>
-</div>
+<strong>Years:</strong> Unknown (current year + limited history)</li>
+<li>
+<strong>Access:</strong> Web interface only, NO API or export functionality found</li>
+<li>
+<strong>Notes:</strong> Primary reporting platform but NOT programmatic-accessible</li>
+</ul></div>
 <div class="section level3">
-<h3 id="source-5-lei-kukui--essa-data-portal">Source 5: LEI Kukui / ESSA Data Portal<a class="anchor" aria-label="anchor" href="#source-5-lei-kukui--essa-data-portal"></a></h3>
+<h3 id="source-4-hidoe-data-book">Source 4: HIDOE Data Book<a class="anchor" aria-label="anchor" href="#source-4-hidoe-data-book"></a></h3>
 <ul><li>
-<strong>URL:</strong> <a href="https://hidoedata.org" class="external-link uri">https://hidoedata.org</a>
+<strong>URL:</strong> <a href="https://arch.k12.hi.us/reports/hidoe-data-book" class="external-link uri">https://arch.k12.hi.us/reports/hidoe-data-book</a>
 </li>
 <li>
-<strong>HTTP Status:</strong> 302 redirect to dashboard</li>
+<strong>Format:</strong> PDF reports with summary statistics</li>
 <li>
-<strong>Format:</strong> Interactive dashboard</li>
+<strong>Years:</strong> Annual (2024 confirmed, likely earlier years exist)</li>
 <li>
-<strong>Access Method:</strong> Web application (JavaScript required)</li>
-</ul><p><strong>Notes:</strong> - ESSA compliance data reporting - Graduation rates by subgroup available in dashboard - No bulk download option found</p>
-<hr></div>
+<strong>Access:</strong> Public download</li>
+<li>
+<strong>Notes:</strong> Contains assessment summary tables but NOT raw school-level data</li>
+</ul></div>
+<div class="section level3">
+<h3 id="source-5-essa-report-cards">Source 5: ESSA Report Cards<a class="anchor" aria-label="anchor" href="#source-5-essa-report-cards"></a></h3>
+<ul><li>
+<strong>URL:</strong> <a href="https://arch.k12.hi.us/reports/essa" class="external-link uri">https://arch.k12.hi.us/reports/essa</a>
+</li>
+<li>
+<strong>Format:</strong> PDF reports (annual)</li>
+<li>
+<strong>Years:</strong> 2017-present (ESSA requirement)</li>
+<li>
+<strong>Access:</strong> Public download</li>
+<li>
+<strong>Notes:</strong> Federal accountability reports with aggregated assessment data</li>
+</ul></div>
 </div>
 <div class="section level2">
 <h2 id="schema-analysis">Schema Analysis<a class="anchor" aria-label="anchor" href="#schema-analysis"></a></h2>
 <div class="section level3">
-<h3 id="ccri-data-schema-2020-2024">CCRI Data Schema (2020-2024)<a class="anchor" aria-label="anchor" href="#ccri-data-schema-2020-2024"></a></h3>
-<p><strong>Column Names (consistent across all years):</strong></p>
-<pre><code>GradYr, SchCode, CCRI_SchoolName, ComplexArea, Island, County,
-Completers_Redact, Completers, Honors_Cert_Redact, Honors_Cert_Pct,
-OnTimeGrad_Redact, OnTimeGrad, [86 total columns]</code></pre>
-<p><strong>ID System:</strong> - School Code: 3-digit numeric (e.g., 103, 106, 220) - No district ID (Hawaii is single statewide district) - Complex Area: Text string (15 areas)</p>
-<p><strong>Data Quality Notes:</strong> - Redacted cells have <code>*</code> in corresponding <code>_Redact</code> column - Graduation rates as decimals (0.00-1.00) - Completers count includes diploma + Certificate of Completion</p>
+<h3 id="master-data-file-structure-2013-14-2014-15">Master Data File Structure (2013-14, 2014-15)<a class="anchor" aria-label="anchor" href="#master-data-file-structure-2013-14-2014-15"></a></h3>
+<div class="section level4">
+<h4 id="column-names">Column Names:<a class="anchor" aria-label="anchor" href="#column-names"></a></h4>
+<pre><code>- School ID
+- Year
+- School Name
+- School Type for Strive HI (Elementary/Middle/High)
+- Title I (Yes/No)
+- Complex Area
+- Strive HI Step (Recognition/Continuous Improvement/Focus/Priority)
+- Final Index Score (0-400 points)
+- Math Proficiency (%)
+- Math Participation Penalty?
+- Math Proficiency - Pooled Data?
+- Reading Proficiency (%)
+- Reading Participation Penalty?
+- Reading Proficiency - Pooled Data?
+- Science Proficiency (%)
+- Science Participation Penalty?
+- Science Proficiency - Pooled Data?
+- Math Median SGP (Student Growth Percentile)
+- Math SGP - Used Pooled Data
+- Reading Median SGP
+- Reading SGP - Used Pooled Data</code></pre>
+</div>
+<div class="section level4">
+<h4 id="key-schema-features">Key Schema Features:<a class="anchor" aria-label="anchor" href="#key-schema-features"></a></h4>
+<ul><li>
+<strong>School-level data</strong> (not student-level)</li>
+<li><strong>Percentages rounded to nearest integer</strong></li>
+<li>
+<strong>Pooled data flags</strong> indicate multi-year averaging for small schools</li>
+<li>
+<strong>Participation penalties</strong> applied when &lt;95% tested</li>
+<li>
+<strong>Growth measures</strong> included (SGP - Student Growth Percentile)</li>
+<li>
+<strong>Index score</strong> calculated from multiple indicators</li>
+</ul></div>
+<div class="section level4">
+<h4 id="id-system">ID System:<a class="anchor" aria-label="anchor" href="#id-system"></a></h4>
+<ul><li>School ID: Numeric identifier (format needs verification from actual data rows)</li>
+<li>Complex Area: Geographic grouping of schools</li>
+<li>No district ID (Hawaii is single statewide district)</li>
+</ul></div>
 </div>
 <div class="section level3">
-<h3 id="dbedt-data-schema">DBEDT Data Schema<a class="anchor" aria-label="anchor" href="#dbedt-data-schema"></a></h3>
-<p><strong>Header Structure:</strong> - Row 1: Table title - Row 2-5: Notes/blank - Row 6: Column headers (Year, Total graduates, Public school graduates, Private school graduates) - Row 7: Blank - Row 8+: Data rows</p>
-<p><strong>Known Issues:</strong> - Multi-row header requires skip logic - Year column is text, needs conversion to numeric</p>
-<hr></div>
+<h3 id="known-data-issues">Known Data Issues:<a class="anchor" aria-label="anchor" href="#known-data-issues"></a></h3>
+<ol style="list-style-type: decimal"><li>
+<strong>Data suppression</strong> for small schools (pooled data used)</li>
+<li>
+<strong>Rounding to integers</strong> (precision loss)</li>
+<li>
+<strong>Index calculation artifacts</strong> - some values may not match published data</li>
+<li>
+<strong>Participation penalties</strong> can affect proficiencies</li>
+<li>
+<strong>Limited year coverage</strong> - only 2 years of raw data found</li>
+</ol></div>
+</div>
+<div class="section level2">
+<h2 id="critical-blocker">Critical Blocker<a class="anchor" aria-label="anchor" href="#critical-blocker"></a></h2>
+<p><strong>NO RAW ASSESSMENT DATA AVAILABLE FOR 2015-16 TO PRESENT</strong></p>
+<p>After extensive searching, only TWO years of downloadable assessment data exist: - 2013-14 (Master Data File) - 2014-15 (Master Data File)</p>
+<p><strong>All subsequent years (2015-16 through present) are only available through:</strong> 1. <strong>ARCH Dashboard</strong> - JavaScript-rendered, no export option 2. <strong>PDF Reports</strong> - Summary tables, not raw data 3. <strong>School report cards</strong> - Individual school PDFs</p>
+<div class="section level3">
+<h3 id="why-this-matters">Why This Matters:<a class="anchor" aria-label="anchor" href="#why-this-matters"></a></h3>
+<ul><li>Hawaii stopped publishing Master Data Files after 2014-15</li>
+<li>Transitioned to ARCH dashboard (web-only access)</li>
+<li>No API identified</li>
+<li>No bulk download option found</li>
+<li>Web scraping may violate ToS and is fragile</li>
+</ul></div>
 </div>
 <div class="section level2">
 <h2 id="time-series-heuristics">Time Series Heuristics<a class="anchor" aria-label="anchor" href="#time-series-heuristics"></a></h2>
+<p>Based on 2013-14 and 2014-15 Master Data Files:</p>
 <div class="section level3">
-<h3 id="expected-ranges">Expected Ranges<a class="anchor" aria-label="anchor" href="#expected-ranges"></a></h3>
-<table class="table"><thead><tr class="header"><th>Metric</th>
-<th>Expected Range</th>
-<th>Red Flag If</th>
-</tr></thead><tbody><tr class="odd"><td>State graduation rate</td>
-<td>82% - 90%</td>
-<td>Outside this range</td>
-</tr><tr class="even"><td>YoY change</td>
-<td>&lt; 3%</td>
-<td>Change &gt; 5%</td>
-</tr><tr class="odd"><td>Total completers (state)</td>
-<td>10,000 - 13,000</td>
-<td>&lt; 9,000 or &gt; 15,000</td>
-</tr><tr class="even"><td>Schools with data</td>
-<td>60 - 70</td>
-<td>&lt; 55</td>
-</tr></tbody></table></div>
-<div class="section level3">
-<h3 id="verified-values-for-fidelity-tests">Verified Values for Fidelity Tests<a class="anchor" aria-label="anchor" href="#verified-values-for-fidelity-tests"></a></h3>
-<p>From CCRI 2020-2024 data: | School | Year | OnTimeGrad | Completers | |——–|——|————|————| | Farrington High School | 2024 | 0.73 | 438 | | Kaimuki High School | 2024 | 0.79 | 130 | | Kalani High School | 2024 | (verify) | (verify) |</p>
-<p>From Strive HI: | Class Year | State Rate | |————|————| | 2024 | 86% | | 2023 | 86% | | 2022 | 85% | | 2021 | 86% |</p>
-<hr></div>
-</div>
-<div class="section level2">
-<h2 id="missing-data--gaps">Missing Data / Gaps<a class="anchor" aria-label="anchor" href="#missing-data--gaps"></a></h2>
-<div class="section level3">
-<h3 id="what-is-available">What Is Available<a class="anchor" aria-label="anchor" href="#what-is-available"></a></h3>
-<ul><li>School-level graduation rates (ACGR): 2020-2024 via CCRI</li>
-<li>State-level graduation rates: 2021-2025 via Strive HI</li>
-<li>Graduation counts: 1990-2022 via DBEDT</li>
-</ul></div>
-<div class="section level3">
-<h3 id="what-is-not-available-downloadable">What Is NOT Available (Downloadable)<a class="anchor" aria-label="anchor" href="#what-is-not-available-downloadable"></a></h3>
+<h3 id="expected-ranges">Expected Ranges:<a class="anchor" aria-label="anchor" href="#expected-ranges"></a></h3>
 <ul><li>
-<strong>Subgroup graduation rates</strong> (race/ethnicity, SPED, ELL, economically disadvantaged)
-<ul><li>Available in ARCH ADC dashboard but not downloadable</li>
-<li>Would require web scraping or API discovery</li>
-</ul></li>
+<strong>Schools:</strong> ~290 schools (traditional + charter)</li>
 <li>
-<strong>Years before 2020</strong> for school-level ACGR rates</li>
+<strong>Math Proficiency:</strong> 30-60% typical (varies by grade/subject)</li>
 <li>
-<strong>Extended completion rates</strong> (5-year rates) at school level</li>
+<strong>Reading Proficiency:</strong> 40-70% typical</li>
+<li>
+<strong>Science Proficiency:</strong> 30-50% typical</li>
+<li>
+<strong>Participation Rate:</strong> 95%+ required (penalties if lower)</li>
+<li>
+<strong>Index Score:</strong> 0-400 points</li>
 </ul></div>
 <div class="section level3">
-<h3 id="potential-future-sources">Potential Future Sources<a class="anchor" aria-label="anchor" href="#potential-future-sources"></a></h3>
-<ul><li>ARCH ADC API (if available)</li>
-<li>HIDOE data request</li>
-<li>Older CCRI files (2015-2019) - URLs appear to be removed/migrated</li>
-</ul><hr></div>
+<h3 id="state-total-expectations-2013-14-data-needed">State Total Expectations (2013-14 data needed):<a class="anchor" aria-label="anchor" href="#state-total-expectations-2013-14-data-needed"></a></h3>
+<ul><li>Total students tested: ~180,000</li>
+<li>Proficiency percentages vary by subject</li>
+<li>All schools should have data (except very small charter schools)</li>
+</ul></div>
+<div class="section level3">
+<h3 id="major-entities">Major Entities:<a class="anchor" aria-label="anchor" href="#major-entities"></a></h3>
+<ul><li>No traditional districts (Hawaii is single district)</li>
+<li>Complex Areas: ~15-20 geographic groupings</li>
+<li>School types: Elementary, Middle, High, K-12, K-8, etc.</li>
+</ul></div>
 </div>
 <div class="section level2">
 <h2 id="recommended-implementation">Recommended Implementation<a class="anchor" aria-label="anchor" href="#recommended-implementation"></a></h2>
 <div class="section level3">
-<h3 id="priority-medium">Priority: <strong>MEDIUM</strong>
-<a class="anchor" aria-label="anchor" href="#priority-medium"></a></h3>
+<h3 id="priority-medium-limited-data-availability">Priority: <strong>MEDIUM</strong> (Limited Data Availability)<a class="anchor" aria-label="anchor" href="#priority-medium-limited-data-availability"></a></h3>
 </div>
 <div class="section level3">
-<h3 id="complexity-easy-for-ccri-data">Complexity: <strong>EASY</strong> (for CCRI data)<a class="anchor" aria-label="anchor" href="#complexity-easy-for-ccri-data"></a></h3>
+<h3 id="complexity-easy-for-2-years--blocked-for-2015-16-to-present">Complexity: <strong>EASY</strong> (for 2 years) / <strong>BLOCKED</strong> (for 2015-16 to present)<a class="anchor" aria-label="anchor" href="#complexity-easy-for-2-years--blocked-for-2015-16-to-present"></a></h3>
 </div>
 <div class="section level3">
-<h3 id="estimated-files-to-modify-3-4">Estimated Files to Modify: 3-4<a class="anchor" aria-label="anchor" href="#estimated-files-to-modify-3-4"></a></h3>
+<h3 id="estimated-files-to-modify-8-10">Estimated Files to Modify: 8-10<a class="anchor" aria-label="anchor" href="#estimated-files-to-modify-8-10"></a></h3>
 </div>
 <div class="section level3">
-<h3 id="implementation-approach">Implementation Approach<a class="anchor" aria-label="anchor" href="#implementation-approach"></a></h3>
-<p><strong>Phase 1: CCRI-based graduation rates (Recommended)</strong></p>
-<p>Add functions to fetch and process CCRI data:</p>
-<ol style="list-style-type: decimal"><li>
-<code>get_raw_grad()</code> - Download CCRI Excel file</li>
-<li>
-<code>fetch_grad()</code> - Return school-level graduation data</li>
-<li>
-<code>fetch_grad_multi()</code> - Multi-year convenience function</li>
-</ol><p><strong>Proposed Output Schema:</strong></p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">tibble</span><span class="op">(</span></span>
-<span>  end_year <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">integer</a></span><span class="op">(</span><span class="op">)</span>,      <span class="co"># Graduation year</span></span>
-<span>  school_code <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>, <span class="co"># 3-digit school code</span></span>
-<span>  school_name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  complex_area <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  island <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  county <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  completers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">integer</a></span><span class="op">(</span><span class="op">)</span>,    <span class="co"># Number of completers</span></span>
-<span>  grad_rate <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="op">)</span>,     <span class="co"># On-time graduation rate (decimal)</span></span>
-<span>  honors_pct <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="op">)</span>     <span class="co"># Percent with honors (optional)</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<p><strong>Phase 2: DBEDT graduation counts (Optional)</strong></p>
-<p>Add functions to fetch historical graduate counts:</p>
-<ol style="list-style-type: decimal"><li>
-<code>get_raw_grad_counts()</code> - Download DBEDT Table 3.15</li>
-<li>
-<code>fetch_grad_counts()</code> - Return state-level graduate counts</li>
-</ol><hr></div>
+<h3 id="what-can-be-implemented">What Can Be Implemented:<a class="anchor" aria-label="anchor" href="#what-can-be-implemented"></a></h3>
+<p><strong>Option 1: Implement 2-Year Assessment Dataset (RECOMMENDED)</strong></p>
+<p>Implement assessment data for the ONLY 2 years with raw data (2013-14, 2014-15):</p>
+<p><strong>Pros:</strong> - Clean, raw Excel data with school-level detail - Math, Reading, Science proficiency percentages - Student Growth Percentiles (SGP) - Implementation straightforward - No web scraping needed</p>
+<p><strong>Cons:</strong> - Only 2 years of data (2013-14, 2014-15) - Not useful for trend analysis - May confuse users expecting recent data</p>
+<p><strong>Files to Create:</strong> 1. <code>R/get_raw_assessment.R</code> - Download Master Data Files 2. <code>R/process_assessment.R</code> - Parse Excel files 3. <code>R/tidy_assessment.R</code> - Transform to tidy format 4. <code>R/fetch_assessment.R</code> - User-facing function 5. <code>tests/testthat/test-assessment-pipeline-live.R</code> - LIVE tests 6. <code>tests/testthat/test-assessment-fidelity.R</code> - Fidelity tests 7. <code>vignettes/assessment-trends.Rmd</code> - Documentation 8. <code>man/fetch_assessment.Rd</code> - Function documentation</p>
+<p><strong>Estimated Implementation Time:</strong> 4-6 hours</p>
+<p><strong>Option 2: Contact HIDOE for Data Access (RECOMMENDED FOR FULL IMPLEMENTATION)</strong></p>
+<p>Before implementing, contact Hawaii DOE Research &amp; Evaluation Office:</p>
+<p><strong>Ask for:</strong> - Historical Master Data Files for 2015-16 to present - API access to ARCH data - Bulk data download option - Automated data access method</p>
+<p><strong>Contact:</strong> - Hawaii DOE Research &amp; Data Requests: <a href="https://hawaiipublicschools.org/data-reports/research-and-data-requests/" class="external-link uri">https://hawaiipublicschools.org/data-reports/research-and-data-requests/</a> - Data Request Form: <a href="https://www.hawaiipublicschools.org/DOE%20Forms/DataGov/DataRequestForm.xlsx" class="external-link uri">https://www.hawaiipublicschools.org/DOE%20Forms/DataGov/DataRequestForm.xlsx</a></p>
+<p><strong>Option 3: Web Scraping ARCH Dashboard (NOT RECOMMENDED)</strong></p>
+<p><strong>Challenges:</strong> - JavaScript-rendered content (requires Selenium/Playwright) - No documented API - May violate Terms of Service - Extremely fragile (breaks when site changes) - No guarantee of historical data access - Ethical/legal concerns</p>
+<p><strong>Recommendation:</strong> DO NOT pursue without explicit HIDOE permission</p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="test-requirements">Test Requirements<a class="anchor" aria-label="anchor" href="#test-requirements"></a></h2>
 <div class="section level3">
-<h3 id="raw-data-fidelity-tests-needed">Raw Data Fidelity Tests Needed<a class="anchor" aria-label="anchor" href="#raw-data-fidelity-tests-needed"></a></h3>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">test_that</span><span class="op">(</span><span class="st">"2024 CCRI: Farrington graduation rate matches raw"</span>, <span class="op">{</span></span>
+<h3 id="raw-data-fidelity-tests-needed">Raw Data Fidelity Tests Needed:<a class="anchor" aria-label="anchor" href="#raw-data-fidelity-tests-needed"></a></h3>
+<p><strong>2013-14 Data:</strong></p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">test_that</span><span class="op">(</span><span class="st">"2013-14: State total Math proficiency matches raw Excel"</span>, <span class="op">{</span></span>
 <span>  <span class="fu">skip_if_offline</span><span class="op">(</span><span class="op">)</span></span>
-<span>  <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu">fetch_grad</span><span class="op">(</span><span class="fl">2024</span><span class="op">)</span></span>
-<span>  <span class="va">farrington</span> <span class="op">&lt;-</span> <span class="va">data</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">school_code</span> <span class="op">==</span> <span class="st">"106"</span><span class="op">)</span></span>
-<span>  <span class="fu">expect_equal</span><span class="op">(</span><span class="va">farrington</span><span class="op">$</span><span class="va">grad_rate</span>, <span class="fl">0.73</span>, tolerance <span class="op">=</span> <span class="fl">0.01</span><span class="op">)</span></span>
-<span>  <span class="fu">expect_equal</span><span class="op">(</span><span class="va">farrington</span><span class="op">$</span><span class="va">completers</span>, <span class="fl">438</span><span class="op">)</span></span>
-<span><span class="op">}</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">test_that</span><span class="op">(</span><span class="st">"2024 CCRI: State average is approximately 86%"</span>, <span class="op">{</span></span>
+<span>  <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu">fetch_assessment</span><span class="op">(</span><span class="fl">2014</span>, subject <span class="op">=</span> <span class="st">"math"</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="co"># Verify against manually checked value from Master Data File</span></span>
+<span>  <span class="co"># (Need to download and verify actual value)</span></span>
+<span>  <span class="fu">expect_equal</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span>, <span class="fl">290</span>, tolerance <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>  <span class="co"># ~290 schools</span></span>
+<span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
+<p><strong>2014-15 Data:</strong></p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">test_that</span><span class="op">(</span><span class="st">"2014-15: Specific school proficiency matches raw Excel"</span>, <span class="op">{</span></span>
 <span>  <span class="fu">skip_if_offline</span><span class="op">(</span><span class="op">)</span></span>
-<span>  <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu">fetch_grad</span><span class="op">(</span><span class="fl">2024</span><span class="op">)</span></span>
-<span>  <span class="va">weighted_avg</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">completers</span> <span class="op">*</span> <span class="va">data</span><span class="op">$</span><span class="va">grad_rate</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">completers</span><span class="op">)</span></span>
-<span>  <span class="fu">expect_equal</span><span class="op">(</span><span class="va">weighted_avg</span>, <span class="fl">0.86</span>, tolerance <span class="op">=</span> <span class="fl">0.02</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu">fetch_assessment</span><span class="op">(</span><span class="fl">2015</span>, subject <span class="op">=</span> <span class="st">"math"</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="co"># Verify known school (e.g., 'Aiea High School')</span></span>
+<span>  <span class="va">aiea</span> <span class="op">&lt;-</span> <span class="va">data</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">school_name</span> <span class="op">==</span> <span class="st">"Aiea High School"</span><span class="op">)</span></span>
+<span>  <span class="co"># (Need to check actual value in Excel file)</span></span>
+<span>  <span class="fu">expect_true</span><span class="op">(</span><span class="va">aiea</span><span class="op">$</span><span class="va">math_proficiency</span> <span class="op">&gt;=</span> <span class="fl">0</span> <span class="op">&amp;</span> <span class="va">aiea</span><span class="op">$</span><span class="va">math_proficiency</span> <span class="op">&lt;=</span> <span class="fl">100</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="data-quality-checks">Data Quality Checks<a class="anchor" aria-label="anchor" href="#data-quality-checks"></a></h3>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">test_that</span><span class="op">(</span><span class="st">"Graduation rates are valid percentages"</span>, <span class="op">{</span></span>
-<span>  <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu">fetch_grad</span><span class="op">(</span><span class="fl">2024</span><span class="op">)</span></span>
-<span>  <span class="fu">expect_true</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/all.html" class="external-link">all</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">grad_rate</span> <span class="op">&gt;=</span> <span class="fl">0</span> <span class="op">&amp;</span> <span class="va">data</span><span class="op">$</span><span class="va">grad_rate</span> <span class="op">&lt;=</span> <span class="fl">1</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="op">}</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">test_that</span><span class="op">(</span><span class="st">"Completers are positive integers"</span>, <span class="op">{</span></span>
-<span>  <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu">fetch_grad</span><span class="op">(</span><span class="fl">2024</span><span class="op">)</span></span>
-<span>  <span class="fu">expect_true</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/all.html" class="external-link">all</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">completers</span> <span class="op">&gt;</span> <span class="fl">0</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="op">}</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">test_that</span><span class="op">(</span><span class="st">"All years have 60+ schools"</span>, <span class="op">{</span></span>
-<span>  <span class="kw">for</span> <span class="op">(</span><span class="va">yr</span> <span class="kw">in</span> <span class="fl">2020</span><span class="op">:</span><span class="fl">2024</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu">fetch_grad</span><span class="op">(</span><span class="va">yr</span><span class="op">)</span></span>
-<span>    <span class="fu">expect_gte</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span>, <span class="fl">60</span>, info <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Year:"</span>, <span class="va">yr</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="op">}</span></span>
-<span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
-<hr></div>
+<h3 id="data-quality-checks">Data Quality Checks:<a class="anchor" aria-label="anchor" href="#data-quality-checks"></a></h3>
+<ul><li>All proficiency percentages between 0-100</li>
+<li>No negative values</li>
+<li>All schools have School ID</li>
+<li>No duplicate school-year combinations</li>
+<li>All years have data (2013-14, 2014-15)</li>
+<li>Major complex areas present</li>
+<li>Participation penalty flags are boolean</li>
+</ul></div>
 </div>
 <div class="section level2">
-<h2 id="implementation-steps">Implementation Steps<a class="anchor" aria-label="anchor" href="#implementation-steps"></a></h2>
-<ol style="list-style-type: decimal"><li>
-<p>Create <code>R/get_raw_graduation.R</code>:</p>
-<ul><li>
-<code>get_ccri_url()</code> - Generate CCRI download URL</li>
-<li>
-<code>download_ccri_data()</code> - Download and cache CCRI Excel</li>
-<li>
-<code>get_raw_grad()</code> - Parse CCRI Excel to data frame</li>
-</ul></li>
-<li>
-<p>Create <code>R/fetch_graduation.R</code>:</p>
-<ul><li>
-<code>fetch_grad()</code> - Main user-facing function</li>
-<li>
-<code>fetch_grad_multi()</code> - Multi-year fetch</li>
-</ul></li>
-<li>
-<p>Create <code>tests/testthat/test-graduation-live.R</code>:</p>
-<ul><li>URL availability tests</li>
-<li>Download tests</li>
-<li>Parsing tests</li>
-<li>Fidelity tests</li>
-<li>Data quality tests</li>
-</ul></li>
-<li><p>Update <code>NAMESPACE</code> and documentation</p></li>
-<li><p>Update <code>DESCRIPTION</code> (no new dependencies needed)</p></li>
-</ol><hr></div>
+<h2 id="implementation-decision-matrix">Implementation Decision Matrix<a class="anchor" aria-label="anchor" href="#implementation-decision-matrix"></a></h2>
+<table class="table"><colgroup><col width="10%"><col width="30%"><col width="32%"><col width="26%"></colgroup><thead><tr class="header"><th>Factor</th>
+<th>Option 1 (2 Years Only)</th>
+<th>Option 2 (Request Data)</th>
+<th>Option 3 (Scraping)</th>
+</tr></thead><tbody><tr class="odd"><td>Data completeness</td>
+<td>2 years</td>
+<td>Unknown</td>
+<td>Potentially full</td>
+</tr><tr class="even"><td>Implementation ease</td>
+<td>Easy</td>
+<td>N/A (contact)</td>
+<td>Hard</td>
+</tr><tr class="odd"><td>Maintenance burden</td>
+<td>Low</td>
+<td>Low</td>
+<td>High</td>
+</tr><tr class="even"><td>Legal/ethical risk</td>
+<td>None</td>
+<td>None</td>
+<td>High</td>
+</tr><tr class="odd"><td>User value</td>
+<td>Limited</td>
+<td>High</td>
+<td>Medium</td>
+</tr><tr class="even"><td>Reliability</td>
+<td>High</td>
+<td>Unknown</td>
+<td>Low</td>
+</tr></tbody></table></div>
 <div class="section level2">
-<h2 id="open-questions">Open Questions<a class="anchor" aria-label="anchor" href="#open-questions"></a></h2>
-<ol style="list-style-type: decimal"><li>
-<strong>CCRI file URL stability</strong>: The file is at <code>/wp-content/uploads/2025/03/...</code> - will this URL change annually?
-<ul><li>Recommendation: Check for URL pattern or search page for latest file</li>
-</ul></li>
-<li>
-<strong>Subgroup data</strong>: Should we pursue ARCH ADC scraping for subgroup graduation rates?
-<ul><li>This would add significant complexity</li>
-</ul></li>
-<li>
-<strong>Historical data</strong>: Should we attempt to recover 2015-2019 CCRI data?
-<ul><li>Would require reaching out to Hawaii P-20 or searching archives</li>
-</ul></li>
-<li>
-<strong>Extended completion</strong>: Should we include 5-year extended completion rate?
-<ul><li>Available in CCRI data but unclear if useful</li>
-</ul></li>
-</ol><hr></div>
+<h2 id="final-recommendation">Final Recommendation<a class="anchor" aria-label="anchor" href="#final-recommendation"></a></h2>
+<p><strong>Recommended Approach: Two-Phase Implementation</strong></p>
+<div class="section level3">
+<h3 id="phase-1-quick-win-implement-2-year-dataset">Phase 1: Quick Win (Implement 2-Year Dataset)<a class="anchor" aria-label="anchor" href="#phase-1-quick-win-implement-2-year-dataset"></a></h3>
+<ol style="list-style-type: decimal"><li>Implement assessment functions for 2013-14 and 2014-15 ONLY</li>
+<li>Clearly document limitation: “Only 2 years of raw assessment data available”</li>
+<li>Add note: “Contact HIDOE for recent years (2015-16 to present)”</li>
+<li>Implement with standard tests and documentation</li>
+<li>Estimated time: 4-6 hours</li>
+</ol></div>
+<div class="section level3">
+<h3 id="phase-2-data-access-request">Phase 2: Data Access Request<a class="anchor" aria-label="anchor" href="#phase-2-data-access-request"></a></h3>
+<ol style="list-style-type: decimal"><li>Submit formal data request to Hawaii DOE</li>
+<li>Ask for Master Data Files for 2015-16 to present</li>
+<li>Inquire about API access to ARCH</li>
+<li>If successful, extend implementation to all years</li>
+</ol></div>
+<div class="section level3">
+<h3 id="alternative-prioritize-different-theme">Alternative: Prioritize Different Theme<a class="anchor" aria-label="anchor" href="#alternative-prioritize-different-theme"></a></h3>
+<p>Given the severe data limitation (only 2 years), consider prioritizing a different data theme with better availability: - <strong>Demographics</strong> (race/ethnicity) - may be in enrollment files - <strong>ELL/SPED/FRPL</strong> - subgroup data in enrollment - <strong>Attendance</strong> - chronic absenteeism in ARCH (same limitation) - <strong>Graduation</strong> - may have better historical data</p>
+</div>
+</div>
 <div class="section level2">
-<h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
-<ul><li>Hawaii DXP CCRI: <a href="https://www.hawaiidxp.org/data-products/college-and-career-readiness-indicators/" class="external-link uri">https://www.hawaiidxp.org/data-products/college-and-career-readiness-indicators/</a>
-</li>
-<li>DBEDT Data Book: <a href="https://dbedt.hawaii.gov/economic/databook/" class="external-link uri">https://dbedt.hawaii.gov/economic/databook/</a>
-</li>
-<li>Strive HI Dashboard: <a href="https://hawaiipublicschools.org/about/organization/strive-hi-dashboard/" class="external-link uri">https://hawaiipublicschools.org/about/organization/strive-hi-dashboard/</a>
-</li>
-<li>ARCH ADC: <a href="https://adc.hidoe.us" class="external-link uri">https://adc.hidoe.us</a>
-</li>
+<h2 id="conclusion">Conclusion<a class="anchor" aria-label="anchor" href="#conclusion"></a></h2>
+<p><strong>Hawaii assessment data implementation is SEVERELY LIMITED</strong> due to: 1. Only 2 years of raw data (2013-14, 2014-15) 2. No public data access for 2015-16 to present 3. ARCH dashboard not programmatic-accessible 4. Web scraping not recommended without permission</p>
+<p><strong>Can implement:</strong> 2-year assessment dataset (2013-14, 2014-15) <strong>Cannot implement:</strong> Multi-year trends, recent data</p>
+<p><strong>Recommendation:</strong> - Implement 2-year dataset if user accepts limitation - OR prioritize different data theme with better availability - OR contact HIDOE for full historical data access</p>
+<hr><p><strong>Research Status:</strong> LIMITED DATA AVAILABILITY - Only 2 years found <strong>Confidence Level:</strong> HIGH - Thorough search of official HIDOE sources <strong>Last Reviewer:</strong> Claude (expand-state skill) <strong>Date:</strong> 2026-01-11</p>
+</div>
+<div class="section level2">
+<h2 id="sources">Sources<a class="anchor" aria-label="anchor" href="#sources"></a></h2>
+<ul><li><a href="https://arch.k12.hi.us/reports/strivehi-performance" class="external-link">Hawaii Strive HI Performance System</a></li>
+<li><a href="https://hawaiipublicschools.org/data-reports/school-reports/" class="external-link">Hawaii Public Schools School Reports</a></li>
+<li><a href="https://hawaiipublicschools.org/data-reports/research-and-data-requests/" class="external-link">Hawaii DOE Research and Data Requests</a></li>
+<li><a href="https://www.hawaiipublicschools.org/DOE%20Forms/StriveHI2014/2013-14MasterDataFile.xlsx" class="external-link">2013-14 Master Data File (Excel)</a></li>
+<li><a href="https://www.hawaiipublicschools.org/DOE%20Forms/StriveHI2015/2014-15MasterDataFile.xlsx" class="external-link">2014-15 Master Data File (Excel)</a></li>
+<li><a href="https://www.hawaiipublicschools.org/DOE%20Forms/StriveHI2023/StriveHITechnicalGuide2023.pdf" class="external-link">Hawaii Strive HI Technical Guides</a></li>
 </ul></div>
 </div>
 
