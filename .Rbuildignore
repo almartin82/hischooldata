@@ -1,1 +1,2 @@
 ^py.*schooldata$
+^vignettes/.*_cache$

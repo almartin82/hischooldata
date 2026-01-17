@@ -8,4 +8,5 @@ src/*.dll
 /doc/
 /Meta/
 vignettes/*_files/
+vignettes/*.html
 *.Rcheck/
