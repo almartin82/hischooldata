@@ -11,7 +11,8 @@ vignette: >
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  eval = FALSE,
+  message = FALSE,
+  warning = FALSE,
   cache = TRUE
 )
 ```
@@ -87,10 +88,10 @@ The returned data frame includes:
 | Column | Description |
 |--------|-------------|
 | `end_year` | School year end (e.g., 2024 for 2023-24) |
-| `agg_level` | Aggregation level: STATE, COUNTY, or CHARTER |
+| `type` | Aggregation level: STATE, COUNTY, or CHARTER |
 | `county_name` | Geographic area name |
-| `grade` | Grade level (PK, K, 01-12, SPED, or TOTAL) |
-| `enrollment` | Number of students enrolled |
+| `grade_level` | Grade level (PK, K, 01-12, SPED, or TOTAL) |
+| `n_students` | Number of students enrolled |
 
 ### Example: County-Level Analysis
 
@@ -103,11 +104,11 @@ enr_multi <- fetch_enr_multi(2020:2024, use_cache = TRUE)
 
 # Calculate county totals over time
 county_trends <- enr_multi |>
-  filter(agg_level == "COUNTY", grade == "TOTAL") |>
-  select(end_year, county_name, enrollment)
+  filter(type == "COUNTY", grade_level == "TOTAL") |>
+  select(end_year, county_name, n_students)
 
 # Plot trends
-ggplot(county_trends, aes(x = end_year, y = enrollment, color = county_name)) +
+ggplot(county_trends, aes(x = end_year, y = n_students, color = county_name)) +
   geom_line(linewidth = 1) +
   geom_point() +
   labs(
@@ -126,11 +127,11 @@ ggplot(county_trends, aes(x = end_year, y = enrollment, color = county_name)) +
 # Get state-level enrollment by grade
 enr_2024 <- fetch_enr(2024, use_cache = TRUE)
 state_grades <- enr_2024 |>
-  filter(county_name == "State Total", grade != "TOTAL") |>
-  mutate(grade = factor(grade, levels = c("PK", "K", sprintf("%02d", 1:12), "SPED")))
+  filter(type == "STATE", grade_level != "TOTAL") |>
+  mutate(grade_level = factor(grade_level, levels = c("PK", "K", sprintf("%02d", 1:12), "SPED")))
 
 # Plot grade distribution
-ggplot(state_grades, aes(x = grade, y = enrollment)) +
+ggplot(state_grades, aes(x = grade_level, y = n_students)) +
   geom_col(fill = "steelblue") +
   labs(
     title = "Hawaii Public School Enrollment by Grade (2023-24)",
@@ -146,7 +147,7 @@ ggplot(state_grades, aes(x = grade, y = enrollment)) +
 
 The package caches downloaded data locally to avoid repeated downloads:
 
-```{r}
+```{r eval=FALSE}
 # Check cache status
 cache_status()
 

@@ -1,0 +1,97 @@
+---
+title: "Getting Started with hischooldata"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting Started with hischooldata}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  message = FALSE,
+  warning = FALSE,
+  cache = TRUE
+)
+```
+
+## Introduction
+
+`hischooldata` provides a simple, consistent interface for accessing Hawaii school enrollment data from the Hawaii Department of Education (HIDOE) via the DBEDT State Data Book.
+
+## Installation
+
+```{r install, eval=FALSE}
+# Install from GitHub
+remotes::install_github("almartin82/hischooldata")
+```
+
+## Quick Start
+
+### Fetch Enrollment Data
+
+The main function is `fetch_enr()` which downloads enrollment data for a specific school year.
+
+```{r fetch-single}
+library(hischooldata)
+library(dplyr)
+
+# Fetch 2024 enrollment data (2023-24 school year)
+enr <- fetch_enr(2024, use_cache = TRUE)
+
+# View the structure
+glimpse(enr)
+```
+
+### Available Years
+
+Check which years are available:
+```{r available-years}
+get_available_years()
+```
+
+### Multi-Year Data
+
+Fetch data for multiple years at once:
+
+```{r fetch-multi}
+# Fetch 3 years of data
+enr_multi <- fetch_enr_multi(2022:2024, use_cache = TRUE)
+
+# Count rows per year
+enr_multi %>%
+  count(end_year)
+```
+
+### Data by County
+
+Hawaii has four counties: Hawaii, Honolulu, Kauai, and Maui:
+
+```{r county-enrollment}
+enr %>%
+  filter(type == "COUNTY", grade_level == "TOTAL") %>%
+  select(county_name, n_students) %>%
+  arrange(desc(n_students))
+```
+
+## Cache Management
+
+The package caches downloaded data to speed up repeated fetches:
+
+```{r cache-status, eval=FALSE}
+# View cached files
+cache_status()
+
+# Clear all cache
+clear_cache()
+
+# Clear specific year
+clear_cache(2024)
+```
+
+## Session Info
+
+```{r session-info}
+sessionInfo()
+```

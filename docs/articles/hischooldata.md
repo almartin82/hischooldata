@@ -46,6 +46,27 @@ library(hischooldata)
 # Get 2024 enrollment data (2023-24 school year)
 enr_2024 <- fetch_enr(2024, use_cache = TRUE)
 head(enr_2024)
+#>   end_year district_id                  district_name county_name  type
+#> 1     2024          HI Hawaii Department of Education State Total STATE
+#> 2     2024          HI Hawaii Department of Education State Total STATE
+#> 3     2024          HI Hawaii Department of Education State Total STATE
+#> 4     2024          HI Hawaii Department of Education State Total STATE
+#> 5     2024          HI Hawaii Department of Education State Total STATE
+#> 6     2024          HI Hawaii Department of Education State Total STATE
+#>   grade_level         subgroup n_students pct aggregation_flag is_state
+#> 1       TOTAL total_enrollment     169308  NA            state     TRUE
+#> 2          PK total_enrollment       1659  NA            state     TRUE
+#> 3           K total_enrollment      11963  NA            state     TRUE
+#> 4          01 total_enrollment      13060  NA            state     TRUE
+#> 5          02 total_enrollment      13300  NA            state     TRUE
+#> 6          03 total_enrollment      12869  NA            state     TRUE
+#>   is_county is_charter
+#> 1     FALSE      FALSE
+#> 2     FALSE      FALSE
+#> 3     FALSE      FALSE
+#> 4     FALSE      FALSE
+#> 5     FALSE      FALSE
+#> 6     FALSE      FALSE
 ```
 
 ### Understanding the end_year Parameter
@@ -65,6 +86,17 @@ to see what years are available:
 
 ``` r
 get_available_years()
+#> $min_year
+#> [1] 2011
+#> 
+#> $max_year
+#> [1] 2025
+#> 
+#> $years
+#>  [1] 2011 2013 2014 2015 2016 2017 2018 2019 2020 2021 2022 2023 2024 2025
+#> 
+#> $description
+#> [1] "Hawaii enrollment data is available for school years ending 2011 to 2025 (except 2012 - no 2011 Data Book published)"
 ```
 
 **Note**: School year 2011-12 (end_year = 2012) is not available because
@@ -77,10 +109,10 @@ The returned data frame includes:
 | Column        | Description                                  |
 |---------------|----------------------------------------------|
 | `end_year`    | School year end (e.g., 2024 for 2023-24)     |
-| `agg_level`   | Aggregation level: STATE, COUNTY, or CHARTER |
+| `type`        | Aggregation level: STATE, COUNTY, or CHARTER |
 | `county_name` | Geographic area name                         |
-| `grade`       | Grade level (PK, K, 01-12, SPED, or TOTAL)   |
-| `enrollment`  | Number of students enrolled                  |
+| `grade_level` | Grade level (PK, K, 01-12, SPED, or TOTAL)   |
+| `n_students`  | Number of students enrolled                  |
 
 ### Example: County-Level Analysis
 
@@ -93,11 +125,11 @@ enr_multi <- fetch_enr_multi(2020:2024, use_cache = TRUE)
 
 # Calculate county totals over time
 county_trends <- enr_multi |>
-  filter(agg_level == "COUNTY", grade == "TOTAL") |>
-  select(end_year, county_name, enrollment)
+  filter(type == "COUNTY", grade_level == "TOTAL") |>
+  select(end_year, county_name, n_students)
 
 # Plot trends
-ggplot(county_trends, aes(x = end_year, y = enrollment, color = county_name)) +
+ggplot(county_trends, aes(x = end_year, y = n_students, color = county_name)) +
   geom_line(linewidth = 1) +
   geom_point() +
   labs(
@@ -110,17 +142,19 @@ ggplot(county_trends, aes(x = end_year, y = enrollment, color = county_name)) +
   theme_minimal()
 ```
 
+![](hischooldata_files/figure-html/unnamed-chunk-5-1.png)
+
 ### Example: Grade-Level Analysis
 
 ``` r
 # Get state-level enrollment by grade
 enr_2024 <- fetch_enr(2024, use_cache = TRUE)
 state_grades <- enr_2024 |>
-  filter(county_name == "State Total", grade != "TOTAL") |>
-  mutate(grade = factor(grade, levels = c("PK", "K", sprintf("%02d", 1:12), "SPED")))
+  filter(type == "STATE", grade_level != "TOTAL") |>
+  mutate(grade_level = factor(grade_level, levels = c("PK", "K", sprintf("%02d", 1:12), "SPED")))
 
 # Plot grade distribution
-ggplot(state_grades, aes(x = grade, y = enrollment)) +
+ggplot(state_grades, aes(x = grade_level, y = n_students)) +
   geom_col(fill = "steelblue") +
   labs(
     title = "Hawaii Public School Enrollment by Grade (2023-24)",
@@ -131,6 +165,8 @@ ggplot(state_grades, aes(x = grade, y = enrollment)) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
+
+![](hischooldata_files/figure-html/unnamed-chunk-6-1.png)
 
 ## Caching
 
