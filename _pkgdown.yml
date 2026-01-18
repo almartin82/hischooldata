@@ -22,3 +22,14 @@ reference:
   contents:
   - cache_status
   - clear_cache
+
+navbar:
+  structure:
+    left: [intro, reference, articles]
+    right: [search, github]
+  components:
+    articles:
+      text: Articles
+      menu:
+      - text: Hawaii Enrollment Trends
+        href: articles/hischooldata.html

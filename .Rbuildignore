@@ -1,1 +1,9 @@
 ^py.*schooldata$
+^CLAUDE\.md$
+^EXPANSION\.md$
+^ASSESSMENT_STATUS\.md$
+^DEVELOPMENT\.md$
+^TODO\.md$
+^\.github$
+^LICENSE\.md$
+^docs$
