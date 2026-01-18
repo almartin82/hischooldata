@@ -354,3 +354,9 @@ ggplot(neighbor_comparison, aes(x = county_label, y = n_students)) +
        x = "", y = "Students") +
   theme_readme()
 ```
+
+## Session Info
+
+```{r session-info}
+sessionInfo()
+```
