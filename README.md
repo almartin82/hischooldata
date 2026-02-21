@@ -19,7 +19,7 @@ Hawaii is unique: it's America's only statewide school district. One state, one 
 
 ## What can you find with hischooldata?
 
-**15 years of enrollment data (2010-2025).** ~170,000 students in 2024. Here are 15 stories hiding in the numbers:
+**15 years of enrollment data (2010-2025).** ~167,000 students in 2025. Here are 15 stories hiding in the numbers:
 
 ---
 
@@ -59,7 +59,7 @@ n_counties <- enr_current %>%
 
 cat("Total students:", format(statewide$n_students, big.mark = ","), "\n")
 cat("Counties served:", n_counties, "(plus Charter Schools)\n")
-#> Total students: 168,123
+#> Total students: 167,076
 #> Counties served: 4 (plus Charter Schools)
 ```
 
@@ -72,6 +72,9 @@ Hawaii lost 15,000 students since 2015. High housing costs push families to the 
 ```r
 state_trend <- enr %>%
   filter(type == "STATE", grade_level == "TOTAL")
+
+stopifnot(nrow(state_trend) > 0)
+state_trend
 
 ggplot(state_trend, aes(x = end_year, y = n_students)) +
   geom_line(linewidth = 1.5, color = "#2C3E50") +
@@ -95,6 +98,9 @@ Hawaii's single statewide district serves four counties plus charter schools. Ho
 county_enr <- enr_current %>%
   filter(grade_level == "TOTAL", type %in% c("COUNTY", "CHARTER")) %>%
   mutate(county_label = reorder(county_name, -n_students))
+
+stopifnot(nrow(county_enr) > 0)
+county_enr
 
 ggplot(county_enr, aes(x = county_label, y = n_students)) +
   geom_col(fill = "#2C3E50") +
@@ -144,6 +150,9 @@ k_trend <- enr %>%
     grade_level == "12" ~ "Grade 12"
   ))
 
+stopifnot(nrow(k_trend) > 0)
+k_trend
+
 ggplot(k_trend, aes(x = end_year, y = n_students, color = grade_label)) +
   geom_line(linewidth = 1.2) +
   geom_point(size = 2.5) +
@@ -172,9 +181,9 @@ cat("Public school enrollment:", format(public_total, big.mark = ","), "\n")
 cat("Estimated private school students: ~35,000\n")
 cat("Private school share: ~",
     round(35000 / (public_total + 35000) * 100, 1), "%\n", sep = "")
-#> Public school enrollment: 168,123
+#> Public school enrollment: 167,076
 #> Estimated private school students: ~35,000
-#> Private school share: ~17.2%
+#> Private school share: ~17.3%
 ```
 
 ---
@@ -186,6 +195,9 @@ Hawaii's charter school enrollment has been increasing as an alternative to trad
 ```r
 charter_trend <- enr %>%
   filter(type == "CHARTER", grade_level == "TOTAL")
+
+stopifnot(nrow(charter_trend) > 0)
+charter_trend
 
 ggplot(charter_trend, aes(x = end_year, y = n_students)) +
   geom_line(linewidth = 1.5, color = "#2C3E50") +
@@ -208,6 +220,9 @@ Each county shows its own enrollment trend. Honolulu (Oahu) dominates overall en
 ```r
 county_trend <- enr %>%
   filter(grade_level == "TOTAL", type == "COUNTY")
+
+stopifnot(nrow(county_trend) > 0)
+county_trend
 
 ggplot(county_trend, aes(x = end_year, y = n_students, color = county_name)) +
   geom_line(linewidth = 1.2) +
@@ -240,7 +255,6 @@ if (nrow(sped) > 0) {
 } else {
   cat("Special education data not separately reported for this year.\n")
 }
-#> Special education data not separately reported for this year.
 ```
 
 ---
@@ -253,6 +267,9 @@ Hawaii's enrollment by grade shows the typical K-12 distribution, with kindergar
 grade_dist <- enr_current %>%
   filter(type == "STATE", !grade_level %in% c("TOTAL", "SPED")) %>%
   mutate(grade_level = factor(grade_level, levels = c("PK", "K", sprintf("%02d", 1:12))))
+
+stopifnot(nrow(grade_dist) > 0)
+grade_dist
 
 ggplot(grade_dist, aes(x = grade_level, y = n_students)) +
   geom_col(fill = "#2C3E50") +
@@ -277,6 +294,9 @@ island_comparison <- enr %>%
   mutate(island_group = ifelse(county_name == "Honolulu", "Honolulu (Oahu)", "Neighbor Islands")) %>%
   group_by(end_year, island_group) %>%
   summarize(n_students = sum(n_students, na.rm = TRUE), .groups = "drop")
+
+stopifnot(nrow(island_comparison) > 0)
+island_comparison
 
 ggplot(island_comparison, aes(x = end_year, y = n_students, color = island_group)) +
   geom_line(linewidth = 1.5) +
@@ -308,6 +328,9 @@ level_comparison <- enr %>%
   group_by(end_year, level) %>%
   summarize(n_students = sum(n_students, na.rm = TRUE), .groups = "drop")
 
+stopifnot(nrow(level_comparison) > 0)
+level_comparison
+
 ggplot(level_comparison, aes(x = end_year, y = n_students, color = level)) +
   geom_line(linewidth = 1.2) +
   geom_point(size = 2.5) +
@@ -335,6 +358,9 @@ Maui County has seen enrollment fluctuations tied to its tourism-dependent econo
 maui_trend <- enr %>%
   filter(grade_level == "TOTAL", county_name == "Maui")
 
+stopifnot(nrow(maui_trend) > 0)
+maui_trend
+
 ggplot(maui_trend, aes(x = end_year, y = n_students)) +
   geom_line(linewidth = 1.5, color = "#9B59B6") +
   geom_point(size = 3, color = "#9B59B6") +
@@ -358,6 +384,8 @@ prek_trend <- enr %>%
   filter(type == "STATE", grade_level == "PK")
 
 if (nrow(prek_trend) > 0 && sum(prek_trend$n_students, na.rm = TRUE) > 0) {
+  prek_trend
+
   ggplot(prek_trend, aes(x = end_year, y = n_students)) +
     geom_line(linewidth = 1.5, color = "#1ABC9C") +
     geom_point(size = 3, color = "#1ABC9C") +
@@ -383,6 +411,9 @@ Hawaii County (Big Island) has the largest student population outside Oahu, serv
 neighbor_comparison <- enr_current %>%
   filter(grade_level == "TOTAL", type == "COUNTY", county_name != "Honolulu") %>%
   mutate(county_label = reorder(county_name, -n_students))
+
+stopifnot(nrow(neighbor_comparison) > 0)
+neighbor_comparison
 
 ggplot(neighbor_comparison, aes(x = county_label, y = n_students)) +
   geom_col(fill = "#E74C3C") +
