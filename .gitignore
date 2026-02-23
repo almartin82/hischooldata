@@ -9,3 +9,5 @@ src/*.dll
 /Meta/
 vignettes/*_files/
 *.Rcheck/
+/cache/
+/figure/
