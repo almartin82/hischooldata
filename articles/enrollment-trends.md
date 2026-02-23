@@ -34,6 +34,7 @@ property tax funding. One state, one system.
 statewide <- enr_current %>%
   filter(type == "STATE", grade_level == "TOTAL") %>%
   select(n_students)
+stopifnot(nrow(statewide) > 0)
 
 # Count counties (Hawaii is organized by county, not individual schools in this data)
 n_counties <- enr_current %>%
@@ -46,17 +47,17 @@ cat("Counties served:", n_counties, "(plus Charter Schools)\n")
 #> Counties served: 4 (plus Charter Schools)
 ```
 
-## 2. Enrollment has been declining for a decade
+## 2. Enrollment dropped ~15,000 students since 2016
 
-Hawaii lost 15,000 students since 2015. High housing costs push families
-to the mainland, and birth rates are falling.
+Hawaii lost nearly 15,000 students since 2016. High housing costs push
+families to the mainland, and birth rates are falling.
 
 ``` r
 state_trend <- enr %>%
   filter(type == "STATE", grade_level == "TOTAL")
 
 stopifnot(nrow(state_trend) > 0)
-state_trend
+print(state_trend)
 #>    end_year district_id                  district_name county_name  type
 #> 1      2016          HI Hawaii Department of Education State Total STATE
 #> 2      2017          HI Hawaii Department of Education State Total STATE
@@ -94,6 +95,8 @@ state_trend
 ggplot(state_trend, aes(x = end_year, y = n_students)) +
   geom_line(linewidth = 1.5, color = "#2C3E50") +
   geom_point(size = 3, color = "#2C3E50") +
+  geom_vline(xintercept = 2020.5, linetype = "dashed", color = "red", alpha = 0.5) +
+  annotate("text", x = 2020.5, y = Inf, label = "COVID", vjust = 2, color = "red", size = 3) +
   scale_y_continuous(labels = comma, limits = c(0, NA)) +
   labs(title = "Hawaii Public School Enrollment",
        subtitle = "Declining as families move to the mainland",
@@ -115,7 +118,7 @@ county_enr <- enr_current %>%
   mutate(county_label = reorder(county_name, -n_students))
 
 stopifnot(nrow(county_enr) > 0)
-county_enr
+print(county_enr)
 #>   end_year district_id                  district_name     county_name    type
 #> 1     2025          HI Hawaii Department of Education        Honolulu  COUNTY
 #> 2     2025          HI Hawaii Department of Education   Hawaii County  COUNTY
@@ -147,31 +150,30 @@ ggplot(county_enr, aes(x = county_label, y = n_students)) +
 
 ![](enrollment-trends_files/figure-html/county-distribution-1.png)
 
-## 4. COVID hit enrollment hard
+## 4. COVID hit enrollment hard – 4,647 students lost in one year
 
 When the pandemic struck, families moved to the mainland or shifted to
-private schools. Hawaii saw significant enrollment drops across all
-counties.
+private schools. Hawaii lost 4,647 students (2.6%) between 2020 and
+2021.
 
 ``` r
 # Show year-over-year change during COVID
 covid_change <- enr %>%
   filter(end_year %in% c(2020, 2021), grade_level == "TOTAL", type == "STATE") %>%
   select(end_year, n_students)
+stopifnot(nrow(covid_change) == 2)
 
-if (nrow(covid_change) == 2) {
-  change <- diff(covid_change$n_students)
-  pct_change <- change / covid_change$n_students[1] * 100
-  cat("Enrollment change 2020-2021:", format(change, big.mark = ","),
-      sprintf("(%.1f%%)", pct_change), "\n")
-}
+change <- diff(covid_change$n_students)
+pct_change <- change / covid_change$n_students[1] * 100
+cat("Enrollment change 2020-2021:", format(change, big.mark = ","),
+    sprintf("(%.1f%%)", pct_change), "\n")
 #> Enrollment change 2020-2021: -4,647 (-2.6%)
 ```
 
 ## 5. Kindergarten is shrinking faster than high school
 
-Hawaii’s kindergarten enrollment has dropped over the years. The
-pipeline of students entering the system is narrowing.
+Hawaii’s kindergarten enrollment dropped from ~13,900 to ~11,700 while
+Grade 9 grew. The pipeline of students entering the system is narrowing.
 
 ``` r
 k_trend <- enr %>%
@@ -183,7 +185,7 @@ k_trend <- enr %>%
   ))
 
 stopifnot(nrow(k_trend) > 0)
-k_trend
+print(k_trend)
 #>    end_year district_id                  district_name county_name  type
 #> 1      2016          HI Hawaii Department of Education State Total STATE
 #> 2      2016          HI Hawaii Department of Education State Total STATE
@@ -281,6 +283,8 @@ k_trend
 ggplot(k_trend, aes(x = end_year, y = n_students, color = grade_label)) +
   geom_line(linewidth = 1.2) +
   geom_point(size = 2.5) +
+  geom_vline(xintercept = 2020.5, linetype = "dashed", color = "red", alpha = 0.5) +
+  annotate("text", x = 2020.5, y = Inf, label = "COVID", vjust = 2, color = "red", size = 3) +
   scale_y_continuous(labels = comma) +
   labs(title = "Kindergarten Shrinking Faster Than High School",
        subtitle = "The pipeline of students is narrowing",
@@ -301,6 +305,7 @@ students who might otherwise attend public schools.
 public_total <- enr_current %>%
   filter(type == "STATE", grade_level == "TOTAL") %>%
   pull(n_students)
+stopifnot(length(public_total) == 1)
 
 cat("Public school enrollment:", format(public_total, big.mark = ","), "\n")
 #> Public school enrollment: 167,076
@@ -311,17 +316,17 @@ cat("Private school share: ~",
 #> Private school share: ~17.3%
 ```
 
-## 7. Charter schools are growing
+## 7. Charter schools grew 25% since 2016
 
-Hawaii’s charter school enrollment has been increasing as an alternative
-to traditional public schools managed by the statewide district.
+Hawaii’s charter school enrollment grew from 10,444 to 13,094 students –
+a 25% increase while overall enrollment declined.
 
 ``` r
 charter_trend <- enr %>%
   filter(type == "CHARTER", grade_level == "TOTAL")
 
 stopifnot(nrow(charter_trend) > 0)
-charter_trend
+print(charter_trend)
 #>    end_year district_id                  district_name     county_name    type
 #> 1      2016          HI Hawaii Department of Education Charter Schools CHARTER
 #> 2      2017          HI Hawaii Department of Education Charter Schools CHARTER
@@ -359,6 +364,8 @@ charter_trend
 ggplot(charter_trend, aes(x = end_year, y = n_students)) +
   geom_line(linewidth = 1.5, color = "#2C3E50") +
   geom_point(size = 3, color = "#2C3E50") +
+  geom_vline(xintercept = 2020.5, linetype = "dashed", color = "red", alpha = 0.5) +
+  annotate("text", x = 2020.5, y = Inf, label = "COVID", vjust = 2, color = "red", size = 3) +
   scale_y_continuous(labels = comma, limits = c(0, NA)) +
   labs(title = "Charter School Enrollment",
        subtitle = "Growing alternative to traditional public schools",
@@ -378,7 +385,7 @@ county_trend <- enr %>%
   filter(grade_level == "TOTAL", type == "COUNTY")
 
 stopifnot(nrow(county_trend) > 0)
-county_trend
+print(county_trend)
 #>    end_year district_id                  district_name   county_name   type
 #> 1      2016          HI Hawaii Department of Education      Honolulu COUNTY
 #> 2      2016          HI Hawaii Department of Education Hawaii County COUNTY
@@ -506,6 +513,8 @@ county_trend
 ggplot(county_trend, aes(x = end_year, y = n_students, color = county_name)) +
   geom_line(linewidth = 1.2) +
   geom_point(size = 2.5) +
+  geom_vline(xintercept = 2020.5, linetype = "dashed", color = "red", alpha = 0.5) +
+  annotate("text", x = 2020.5, y = Inf, label = "COVID", vjust = 2, color = "red", size = 3) +
   scale_y_continuous(labels = comma) +
   labs(title = "Enrollment by County",
        subtitle = "Honolulu dominates but all counties affected by decline",
@@ -518,7 +527,8 @@ ggplot(county_trend, aes(x = end_year, y = n_students, color = county_name)) +
 ## 9. Special education enrollment
 
 Hawaii tracks special education enrollment separately from regular
-grades in the DBEDT data.
+grades in the DBEDT data. SPED data is suppressed in the most recent
+year per the Data Book footnote.
 
 ``` r
 sped <- enr_current %>%
@@ -539,7 +549,7 @@ if (nrow(sped) > 0) {
 ## 10. Grade level distribution
 
 Hawaii’s enrollment by grade shows the typical K-12 distribution, with
-kindergarten serving as the entry point to the system.
+Grade 9 as the largest grade in 2025.
 
 ``` r
 grade_dist <- enr_current %>%
@@ -547,7 +557,7 @@ grade_dist <- enr_current %>%
   mutate(grade_level = factor(grade_level, levels = c("PK", "K", sprintf("%02d", 1:12))))
 
 stopifnot(nrow(grade_dist) > 0)
-grade_dist
+print(grade_dist)
 #>    end_year district_id                  district_name county_name  type
 #> 1      2025          HI Hawaii Department of Education State Total STATE
 #> 2      2025          HI Hawaii Department of Education State Total STATE
@@ -605,7 +615,7 @@ ggplot(grade_dist, aes(x = grade_level, y = n_students)) +
 
 ![](enrollment-trends_files/figure-html/grade-distribution-1.png)
 
-## 11. Honolulu dominates but neighbor islands hold stronger
+## 11. Honolulu lost 14,170 students while neighbor islands lost only 3,399
 
 Honolulu County (Oahu) has about two-thirds of all students, but
 neighbor island counties have maintained enrollment more effectively
@@ -619,7 +629,7 @@ island_comparison <- enr %>%
   summarize(n_students = sum(n_students, na.rm = TRUE), .groups = "drop")
 
 stopifnot(nrow(island_comparison) > 0)
-island_comparison
+print(island_comparison)
 #> # A tibble: 20 × 3
 #>    end_year island_group     n_students
 #>       <dbl> <chr>                 <dbl>
@@ -647,6 +657,8 @@ island_comparison
 ggplot(island_comparison, aes(x = end_year, y = n_students, color = island_group)) +
   geom_line(linewidth = 1.5) +
   geom_point(size = 3) +
+  geom_vline(xintercept = 2020.5, linetype = "dashed", color = "red", alpha = 0.5) +
+  annotate("text", x = 2020.5, y = Inf, label = "COVID", vjust = 2, color = "red", size = 3) +
   scale_y_continuous(labels = comma, limits = c(0, NA)) +
   scale_color_manual(values = c("Honolulu (Oahu)" = "#2C3E50", "Neighbor Islands" = "#1ABC9C")) +
   labs(title = "Honolulu vs Neighbor Islands",
@@ -675,7 +687,7 @@ level_comparison <- enr %>%
   summarize(n_students = sum(n_students, na.rm = TRUE), .groups = "drop")
 
 stopifnot(nrow(level_comparison) > 0)
-level_comparison
+print(level_comparison)
 #> # A tibble: 30 × 3
 #>    end_year level              n_students
 #>       <dbl> <chr>                   <dbl>
@@ -694,6 +706,8 @@ level_comparison
 ggplot(level_comparison, aes(x = end_year, y = n_students, color = level)) +
   geom_line(linewidth = 1.2) +
   geom_point(size = 2.5) +
+  geom_vline(xintercept = 2020.5, linetype = "dashed", color = "red", alpha = 0.5) +
+  annotate("text", x = 2020.5, y = Inf, label = "COVID", vjust = 2, color = "red", size = 3) +
   scale_y_continuous(labels = comma) +
   scale_color_manual(values = c(
     "Elementary (K-5)" = "#3498DB",
@@ -708,18 +722,18 @@ ggplot(level_comparison, aes(x = end_year, y = n_students, color = level)) +
 
 ![](enrollment-trends_files/figure-html/elementary-vs-secondary-1.png)
 
-## 13. Maui’s tourism economy shows in school enrollment
+## 13. Maui lost 2,346 students since 2016 – wildfires compound the decline
 
-Maui County has seen enrollment fluctuations tied to its
-tourism-dependent economy. The 2023 wildfires added new challenges to an
-already changing population.
+Maui County has seen enrollment drop from 21,080 to 18,734 since 2016.
+The 2023 Lahaina wildfire added new challenges to an already declining
+population.
 
 ``` r
 maui_trend <- enr %>%
   filter(grade_level == "TOTAL", county_name == "Maui")
 
 stopifnot(nrow(maui_trend) > 0)
-maui_trend
+print(maui_trend)
 #>    end_year district_id                  district_name county_name   type
 #> 1      2016          HI Hawaii Department of Education        Maui COUNTY
 #> 2      2017          HI Hawaii Department of Education        Maui COUNTY
@@ -757,39 +771,72 @@ maui_trend
 ggplot(maui_trend, aes(x = end_year, y = n_students)) +
   geom_line(linewidth = 1.5, color = "#9B59B6") +
   geom_point(size = 3, color = "#9B59B6") +
+  geom_vline(xintercept = 2020.5, linetype = "dashed", color = "red", alpha = 0.5) +
+  annotate("text", x = 2020.5, y = Inf, label = "COVID", vjust = 2, color = "red", size = 3) +
   scale_y_continuous(labels = comma, limits = c(0, NA)) +
   labs(title = "Maui County Enrollment",
-       subtitle = "Tourism economy and population shifts affect enrollment",
+       subtitle = "Tourism economy and wildfire impacts affect enrollment",
        x = "School Year", y = "Students") +
   theme_minimal(base_size = 14)
 ```
 
 ![](enrollment-trends_files/figure-html/maui-n_students-1.png)
 
-## 14. Pre-K enrollment signals future trends
+## 14. Pre-K enrollment holds steady around 1,600
 
-Pre-Kindergarten enrollment provides an early signal of what elementary
-schools will see in coming years. Hawaii’s Pre-K numbers show the
-declining pipeline.
+Pre-Kindergarten enrollment has remained relatively stable around 1,600
+students, fluctuating between 1,575 and 1,757 over the past decade.
 
 ``` r
 prek_trend <- enr %>%
   filter(type == "STATE", grade_level == "PK")
 
-if (nrow(prek_trend) > 0 && sum(prek_trend$n_students, na.rm = TRUE) > 0) {
-  prek_trend
+stopifnot(nrow(prek_trend) > 0)
+print(prek_trend)
+#>    end_year district_id                  district_name county_name  type
+#> 1      2016          HI Hawaii Department of Education State Total STATE
+#> 2      2017          HI Hawaii Department of Education State Total STATE
+#> 3      2018          HI Hawaii Department of Education State Total STATE
+#> 4      2019          HI Hawaii Department of Education State Total STATE
+#> 5      2020          HI Hawaii Department of Education State Total STATE
+#> 6      2021          HI Hawaii Department of Education State Total STATE
+#> 7      2022          HI Hawaii Department of Education State Total STATE
+#> 8      2023          HI Hawaii Department of Education State Total STATE
+#> 9      2024          HI Hawaii Department of Education State Total STATE
+#> 10     2025          HI Hawaii Department of Education State Total STATE
+#>    grade_level         subgroup n_students pct aggregation_flag is_state
+#> 1           PK total_enrollment       1586  NA            state     TRUE
+#> 2           PK total_enrollment       1648  NA            state     TRUE
+#> 3           PK total_enrollment       1582  NA            state     TRUE
+#> 4           PK total_enrollment       1580  NA            state     TRUE
+#> 5           PK total_enrollment       1757  NA            state     TRUE
+#> 6           PK total_enrollment       1737  NA            state     TRUE
+#> 7           PK total_enrollment       1578  NA            state     TRUE
+#> 8           PK total_enrollment       1575  NA            state     TRUE
+#> 9           PK total_enrollment       1659  NA            state     TRUE
+#> 10          PK total_enrollment       1736  NA            state     TRUE
+#>    is_county is_charter
+#> 1      FALSE      FALSE
+#> 2      FALSE      FALSE
+#> 3      FALSE      FALSE
+#> 4      FALSE      FALSE
+#> 5      FALSE      FALSE
+#> 6      FALSE      FALSE
+#> 7      FALSE      FALSE
+#> 8      FALSE      FALSE
+#> 9      FALSE      FALSE
+#> 10     FALSE      FALSE
 
-  ggplot(prek_trend, aes(x = end_year, y = n_students)) +
-    geom_line(linewidth = 1.5, color = "#1ABC9C") +
-    geom_point(size = 3, color = "#1ABC9C") +
-    scale_y_continuous(labels = comma, limits = c(0, NA)) +
-    labs(title = "Pre-Kindergarten Enrollment",
-         subtitle = "Early indicator of future elementary enrollment",
-         x = "School Year", y = "Students") +
-    theme_minimal(base_size = 14)
-} else {
-  cat("Pre-K data not available or all zeros in the data range.\n")
-}
+ggplot(prek_trend, aes(x = end_year, y = n_students)) +
+  geom_line(linewidth = 1.5, color = "#1ABC9C") +
+  geom_point(size = 3, color = "#1ABC9C") +
+  geom_vline(xintercept = 2020.5, linetype = "dashed", color = "red", alpha = 0.5) +
+  annotate("text", x = 2020.5, y = Inf, label = "COVID", vjust = 2, color = "red", size = 3) +
+  scale_y_continuous(labels = comma, limits = c(0, NA)) +
+  labs(title = "Pre-Kindergarten Enrollment",
+       subtitle = "Stable around 1,600 students per year",
+       x = "School Year", y = "Students") +
+  theme_minimal(base_size = 14)
 ```
 
 ![](enrollment-trends_files/figure-html/prek-trends-1.png)
@@ -797,8 +844,8 @@ if (nrow(prek_trend) > 0 && sum(prek_trend$n_students, na.rm = TRUE) > 0) {
 ## 15. Big Island holds largest neighbor island enrollment
 
 Hawaii County (Big Island) has the largest student population outside
-Oahu, serving rural communities across a geographic area larger than all
-other Hawaiian islands combined.
+Oahu with 22,715 students, serving rural communities across a geographic
+area larger than all other Hawaiian islands combined.
 
 ``` r
 neighbor_comparison <- enr_current %>%
@@ -806,7 +853,7 @@ neighbor_comparison <- enr_current %>%
   mutate(county_label = reorder(county_name, -n_students))
 
 stopifnot(nrow(neighbor_comparison) > 0)
-neighbor_comparison
+print(neighbor_comparison)
 #>   end_year district_id                  district_name   county_name   type
 #> 1     2025          HI Hawaii Department of Education Hawaii County COUNTY
 #> 2     2025          HI Hawaii Department of Education          Maui COUNTY
