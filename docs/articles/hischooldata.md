@@ -178,12 +178,17 @@ The package caches downloaded data locally to avoid repeated downloads:
 ``` r
 # Check cache status
 cache_status()
-#>   year       type size_mb age_days
-#> 1 2020 enrollment       0        0
-#> 2 2021 enrollment       0        0
-#> 3 2022 enrollment       0        0
-#> 4 2023 enrollment       0        0
-#> 5 2024 enrollment       0        0
+#>    year       type size_mb age_days
+#> 1  2016 enrollment       0        0
+#> 2  2017 enrollment       0        0
+#> 3  2018 enrollment       0        0
+#> 4  2019 enrollment       0        0
+#> 5  2020 enrollment       0        0
+#> 6  2021 enrollment       0        0
+#> 7  2022 enrollment       0        0
+#> 8  2023 enrollment       0        0
+#> 9  2024 enrollment       0        0
+#> 10 2025 enrollment       0        0
 
 # Clear cache for a specific year
 clear_cache(2024)
@@ -257,20 +262,19 @@ sessionInfo()
 #> [1] stats     graphics  grDevices utils     datasets  methods   base     
 #> 
 #> other attached packages:
-#> [1] ggplot2_4.0.1      dplyr_1.1.4        hischooldata_0.1.0
+#> [1] ggplot2_4.0.1      dplyr_1.2.0        hischooldata_0.1.0
 #> 
 #> loaded via a namespace (and not attached):
 #>  [1] gtable_0.3.6       jsonlite_2.0.0     compiler_4.5.0     tidyselect_1.2.1  
-#>  [5] jquerylib_0.1.4    scales_1.4.0       systemfonts_1.3.1  textshaping_1.0.4 
-#>  [9] yaml_2.3.12        fastmap_1.2.0      readxl_1.4.5       R6_2.6.1          
-#> [13] labeling_0.4.3     generics_0.1.4     curl_7.0.0         knitr_1.51        
-#> [17] htmlwidgets_1.6.4  tibble_3.3.1       desc_1.4.3         RColorBrewer_1.1-3
-#> [21] bslib_0.9.0        pillar_1.11.1      rlang_1.1.7        cachem_1.1.0      
-#> [25] xfun_0.55          S7_0.2.1           fs_1.6.6           sass_0.4.10       
-#> [29] otel_0.2.0         cli_3.6.5          pkgdown_2.2.0      withr_3.0.2       
-#> [33] magrittr_2.0.4     digest_0.6.39      grid_4.5.0         rappdirs_0.3.4    
-#> [37] lifecycle_1.0.5    vctrs_0.7.0        evaluate_1.0.5     glue_1.8.0        
-#> [41] farver_2.1.2       cellranger_1.1.0   codetools_0.2-20   ragg_1.5.0        
-#> [45] purrr_1.2.1        rmarkdown_2.30     httr_1.4.7         tools_4.5.0       
-#> [49] pkgconfig_2.0.3    htmltools_0.5.9
+#>  [5] jquerylib_0.1.4    systemfonts_1.3.1  scales_1.4.0       textshaping_1.0.4 
+#>  [9] yaml_2.3.12        fastmap_1.2.0      R6_2.6.1           labeling_0.4.3    
+#> [13] generics_0.1.4     knitr_1.51         htmlwidgets_1.6.4  tibble_3.3.1      
+#> [17] desc_1.4.3         bslib_0.9.0        pillar_1.11.1      RColorBrewer_1.1-3
+#> [21] rlang_1.1.7        cachem_1.1.0       xfun_0.55          S7_0.2.1          
+#> [25] fs_1.6.6           sass_0.4.10        otel_0.2.0         cli_3.6.5         
+#> [29] withr_3.0.2        pkgdown_2.2.0      magrittr_2.0.4     digest_0.6.39     
+#> [33] grid_4.5.0         rappdirs_0.3.4     lifecycle_1.0.5    vctrs_0.7.1       
+#> [37] evaluate_1.0.5     glue_1.8.0         farver_2.1.2       codetools_0.2-20  
+#> [41] ragg_1.5.0         purrr_1.2.1        rmarkdown_2.30     tools_4.5.0       
+#> [45] pkgconfig_2.0.3    htmltools_0.5.9
 ```

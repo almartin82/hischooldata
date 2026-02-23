@@ -15,11 +15,11 @@ Fetch and analyze Hawaii school enrollment data from the Hawaii Department of Ed
 
 This package is part of the [State Schooldata Project](https://github.com/almartin82/njschooldata), which started with [njschooldata](https://github.com/almartin82/njschooldata) for New Jersey. The goal is to provide a simple, consistent interface for accessing state-published school data directly from state Departments of Education - not federal aggregations that lose state-specific details.
 
-Hawaii is unique: it's America's only statewide school district. One state, one system, no local school boards. This package lets you explore 15 years of enrollment data across counties and schools with a single function call.
+Hawaii is unique: it's America's only statewide school district. One state, one system, no local school boards. This package lets you explore 14 years of enrollment data (2011-2025, excluding 2012) across counties and schools with a single function call.
 
 ## What can you find with hischooldata?
 
-**15 years of enrollment data (2011-2025).** ~167,000 students in 2025. Here are 15 stories hiding in the numbers:
+**14 years of enrollment data (2011-2025, 2012 unavailable).** ~167,000 students in 2025. Here are 15 stories hiding in the numbers:
 
 ---
 

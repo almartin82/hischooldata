@@ -19,7 +19,7 @@
 <li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="articles/enrollment-trends.html">Hawaii Enrollment Trends</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="articles/hischooldata.html">Hawaii Enrollment Trends</a></li>
   </ul></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="search.json"></form></li>
@@ -142,6 +142,24 @@
 <h3 id="auto-merge-requirements">Auto-Merge Requirements<a class="anchor" aria-label="anchor" href="#auto-merge-requirements"></a></h3>
 <p>PRs auto-merge when ALL CI checks pass: - R-CMD-check (0 errors, 0 warnings) - Python tests (if py{st}schooldata exists) - pkgdown build (vignettes must render)</p>
 <p>If CI fails, fix the issue and push - auto-merge triggers when checks pass.</p>
+<hr></div>
+</div>
+<div class="section level2">
+<h2 id="valid-filter-values-tidy-enrollment-via-fetch_enrtidy--true">Valid Filter Values (tidy enrollment via <code>fetch_enr(tidy = TRUE)</code>)<a class="anchor" aria-label="anchor" href="#valid-filter-values-tidy-enrollment-via-fetch_enrtidy--true"></a></h2>
+<div class="section level3">
+<h3 id="subgroup">subgroup<a class="anchor" aria-label="anchor" href="#subgroup"></a></h3>
+<p><code>total_enrollment</code></p>
+<p><strong>NOT in tidy enrollment:</strong> Hawaii only provides total enrollment counts. No race/ethnicity, gender, or special population breakdowns are available in the enrollment data.</p>
+</div>
+<div class="section level3">
+<h3 id="grade_level">grade_level<a class="anchor" aria-label="anchor" href="#grade_level"></a></h3>
+<p><code>TOTAL</code>, <code>PK</code>, <code>K</code>, <code>01</code>-<code>12</code>, <code>SPED</code></p>
+<p><strong>Common trap:</strong> Raw data uses <code>Pre-Kindergarten</code>/<code>Nursery</code>/<code>Pre-K</code> for pre-K and <code>Special Ed.</code>/<code>Special Education</code> for special ed, but <code><a href="reference/get_raw_enr.html">get_raw_enr()</a></code> normalizes to <code>PK</code> and <code>SPED</code>. Always filter on the normalized values.</p>
+</div>
+<div class="section level3">
+<h3 id="entity-flags">entity flags<a class="anchor" aria-label="anchor" href="#entity-flags"></a></h3>
+<p><code>is_state</code>, <code>is_county</code>, <code>is_charter</code></p>
+<p>Hawaii is a single statewide district. The <code>type</code> column has values <code>STATE</code>, <code>COUNTY</code>, and <code>CHARTER</code>. County-level rows represent the four main counties (Honolulu, Hawaii County, Maui, Kauai). There is no <code>is_district</code> or <code>is_school</code> flag – use <code>is_county</code> instead.</p>
 <hr></div>
 </div>
 <div class="section level2">

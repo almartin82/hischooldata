@@ -139,6 +139,36 @@ pass.
 
 ------------------------------------------------------------------------
 
+## Valid Filter Values (tidy enrollment via `fetch_enr(tidy = TRUE)`)
+
+### subgroup
+
+`total_enrollment`
+
+**NOT in tidy enrollment:** Hawaii only provides total enrollment
+counts. No race/ethnicity, gender, or special population breakdowns are
+available in the enrollment data.
+
+### grade_level
+
+`TOTAL`, `PK`, `K`, `01`-`12`, `SPED`
+
+**Common trap:** Raw data uses `Pre-Kindergarten`/`Nursery`/`Pre-K` for
+pre-K and `Special Ed.`/`Special Education` for special ed, but
+[`get_raw_enr()`](https://almartin82.github.io/hischooldata/reference/get_raw_enr.md)
+normalizes to `PK` and `SPED`. Always filter on the normalized values.
+
+### entity flags
+
+`is_state`, `is_county`, `is_charter`
+
+Hawaii is a single statewide district. The `type` column has values
+`STATE`, `COUNTY`, and `CHARTER`. County-level rows represent the four
+main counties (Honolulu, Hawaii County, Maui, Kauai). There is no
+`is_district` or `is_school` flag – use `is_county` instead.
+
+------------------------------------------------------------------------
+
 ## README Images from Vignettes (REQUIRED)
 
 **NEVER use `man/figures/` or `generate_readme_figs.R` for README
