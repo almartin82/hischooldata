@@ -58,8 +58,7 @@
 <!-- badges: start -->
 
 <p>Hawaii is America’s only statewide school district – one state, one system, no local school boards. This package fetches 15 years of enrollment data directly from the Hawaii Department of Education so you can track what’s happening across all four counties and charter schools with a single function call.</p>
-<p>Part of the <a href="https://github.com/almartin82/njschooldata" class="external-link">State Schooldata Project</a>, which started with <a href="https://github.com/almartin82/njschooldata" class="external-link">njschooldata</a> for New Jersey.</p>
-<p><strong>Docs: <a href="https://almartin82.github.io/hischooldata/" class="uri">https://almartin82.github.io/hischooldata/</a></strong></p>
+<p>Part of the <a href="https://github.com/almartin82/njschooldata" class="external-link">njschooldata</a> family. <strong><a href="https://almartin82.github.io/hischooldata/">Docs</a></strong></p>
 <div class="section level2">
 <h2 id="data-taxonomy">Data Taxonomy<a class="anchor" aria-label="anchor" href="#data-taxonomy"></a>
 </h2>
@@ -80,61 +79,63 @@
 <tr class="odd">
 <td><strong>Enrollment</strong></td>
 <td>2011-2025</td>
-<td><code><a href="reference/fetch_enr.html">fetch_enr()</a></code></td>
-<td>State, County (Honolulu, Hawaii County, Maui, Kauai), Charter; grades PK-12 + SPED + TOTAL; subgroup: <code>total_enrollment</code> only (no demographic breakdowns)</td>
+<td>
+<code><a href="reference/fetch_enr.html">fetch_enr()</a></code> / <code><a href="reference/fetch_enr_multi.html">fetch_enr_multi()</a></code>
+</td>
+<td>State, county (Honolulu, Hawaii County, Maui, Kauai), charter; grades PK-12 + SPED + TOTAL; subgroup: <code>total_enrollment</code> only (no demographic breakdowns)</td>
 </tr>
 <tr class="even">
 <td>Assessments</td>
 <td>–</td>
 <td>–</td>
-<td>Not yet available</td>
+<td>–</td>
 </tr>
 <tr class="odd">
 <td>Graduation</td>
 <td>–</td>
 <td>–</td>
-<td>Not yet available</td>
+<td>–</td>
 </tr>
 <tr class="even">
 <td>Directory</td>
 <td>–</td>
 <td>–</td>
-<td>Not yet available</td>
+<td>–</td>
 </tr>
 <tr class="odd">
 <td>Per-Pupil Spending</td>
 <td>–</td>
 <td>–</td>
-<td>Not yet available</td>
+<td>–</td>
 </tr>
 <tr class="even">
 <td>Accountability</td>
 <td>–</td>
 <td>–</td>
-<td>Not yet available</td>
+<td>–</td>
 </tr>
 <tr class="odd">
 <td>Chronic Absence</td>
 <td>–</td>
 <td>–</td>
-<td>Not yet available</td>
+<td>–</td>
 </tr>
 <tr class="even">
 <td>EL Progress</td>
 <td>–</td>
 <td>–</td>
-<td>Not yet available</td>
+<td>–</td>
 </tr>
 <tr class="odd">
 <td>Special Ed</td>
 <td>–</td>
 <td>–</td>
-<td>Not yet available</td>
+<td>–</td>
 </tr>
 </tbody>
 </table>
 <blockquote>
-<p>See the full <a href="docs/DATA-CATEGORY-TAXONOMY.html">data category taxonomy</a> for all 30 categories tracked across the state schooldata project.</p>
+<p>See the full <a href="https://github.com/almartin82/state-schooldata/blob/main/docs/DATA-CATEGORY-TAXONOMY.md" class="external-link">data category taxonomy</a> for all 30 categories tracked across the state schooldata project.</p>
 </blockquote>
 </div>
 <div class="section level2">
@@ -230,67 +231,26 @@
 <span><span class="va">enr_current</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fetch_enr.html">fetch_enr</a></span><span class="op">(</span><span class="va">max_year</span>, use_cache <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <hr>
 <div class="section level3">
-<h3 id="id_1-enrollment-dropped-15000-students-since-2016">1. Enrollment dropped ~15,000 students since 2016<a class="anchor" aria-label="anchor" href="#id_1-enrollment-dropped-15000-students-since-2016"></a>
-</h3>
-<p>Hawaii lost nearly 15,000 students since 2016. High housing costs push families to the mainland, and birth rates are falling.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">state_trend</span> <span class="op">&lt;-</span> <span class="va">enr</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">type</span> <span class="op">==</span> <span class="st">"STATE"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">state_trend</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">state_trend</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 10 x 8</span></span>
-<span><span class="co">#&gt;    end_year type  county_name grade_level n_students subgroup         is_state is_county</span></span>
-<span><span class="co">#&gt;       &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;       &lt;chr&gt;            &lt;dbl&gt; &lt;chr&gt;            &lt;lgl&gt;    &lt;lgl&gt;</span></span>
-<span><span class="co">#&gt;  1     2016 STATE Statewide   TOTAL           181995 total_enrollment TRUE     FALSE</span></span>
-<span><span class="co">#&gt;  2     2017 STATE Statewide   TOTAL           181550 total_enrollment TRUE     FALSE</span></span>
-<span><span class="co">#&gt;  3     2018 STATE Statewide   TOTAL           180837 total_enrollment TRUE     FALSE</span></span>
-<span><span class="co">#&gt;  4     2019 STATE Statewide   TOTAL           181278 total_enrollment TRUE     FALSE</span></span>
-<span><span class="co">#&gt;  5     2020 STATE Statewide   TOTAL           181088 total_enrollment TRUE     FALSE</span></span>
-<span><span class="co">#&gt;  6     2021 STATE Statewide   TOTAL           176441 total_enrollment TRUE     FALSE</span></span>
-<span><span class="co">#&gt;  7     2022 STATE Statewide   TOTAL           173178 total_enrollment TRUE     FALSE</span></span>
-<span><span class="co">#&gt;  8     2023 STATE Statewide   TOTAL           170209 total_enrollment TRUE     FALSE</span></span>
-<span><span class="co">#&gt;  9     2024 STATE Statewide   TOTAL           169308 total_enrollment TRUE     FALSE</span></span>
-<span><span class="co">#&gt; 10     2025 STATE Statewide   TOTAL           167076 total_enrollment TRUE     FALSE</span></span>
-<span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">state_trend</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">end_year</span>, y <span class="op">=</span> <span class="va">n_students</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span>linewidth <span class="op">=</span> <span class="fl">1.5</span>, color <span class="op">=</span> <span class="st">"#2C3E50"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">3</span>, color <span class="op">=</span> <span class="st">"#2C3E50"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_vline</a></span><span class="op">(</span>xintercept <span class="op">=</span> <span class="fl">2020.5</span>, linetype <span class="op">=</span> <span class="st">"dashed"</span>, color <span class="op">=</span> <span class="st">"red"</span>, alpha <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/annotate.html" class="external-link">annotate</a></span><span class="op">(</span><span class="st">"text"</span>, x <span class="op">=</span> <span class="fl">2020.5</span>, y <span class="op">=</span> <span class="cn">Inf</span>, label <span class="op">=</span> <span class="st">"COVID"</span>, vjust <span class="op">=</span> <span class="fl">2</span>, color <span class="op">=</span> <span class="st">"red"</span>, size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>labels <span class="op">=</span> <span class="va">comma</span>, limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="cn">NA</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Hawaii Public School Enrollment"</span>,</span>
-<span>       subtitle <span class="op">=</span> <span class="st">"Declining as families move to the mainland"</span>,</span>
-<span>       x <span class="op">=</span> <span class="st">"School Year"</span>, y <span class="op">=</span> <span class="st">"Students"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span>base_size <span class="op">=</span> <span class="fl">14</span><span class="op">)</span></span></code></pre></div>
-<div class="float">
-<img src="https://almartin82.github.io/hischooldata/articles/enrollment-trends_files/figure-html/n_students-decline-1.png" alt="Hawaii Public School Enrollment"><div class="figcaption">Hawaii Public School Enrollment</div>
-</div>
-<hr>
-</div>
-<div class="section level3">
-<h3 id="id_2-charter-schools-grew-25-since-2016">2. Charter schools grew 25% since 2016<a class="anchor" aria-label="anchor" href="#id_2-charter-schools-grew-25-since-2016"></a>
+<h3 id="id_7-charter-schools-grew-25-since-2016">7. Charter schools grew 25% since 2016<a class="anchor" aria-label="anchor" href="#id_7-charter-schools-grew-25-since-2016"></a>
 </h3>
 <p>Hawaii’s charter school enrollment grew from 10,444 to 13,094 students – a 25% increase while overall enrollment declined.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">charter_trend</span> <span class="op">&lt;-</span> <span class="va">enr</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">type</span> <span class="op">==</span> <span class="st">"CHARTER"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">charter_trend</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">charter_trend</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 10 x 9</span></span>
-<span><span class="co">#&gt;    end_year type    county_name     grade_level n_students subgroup         is_state is_county is_charter</span></span>
-<span><span class="co">#&gt;       &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;           &lt;chr&gt;            &lt;dbl&gt; &lt;chr&gt;            &lt;lgl&gt;    &lt;lgl&gt;     &lt;lgl&gt;</span></span>
-<span><span class="co">#&gt;  1     2016 CHARTER Charter Schools TOTAL            10444 total_enrollment FALSE    FALSE     TRUE</span></span>
-<span><span class="co">#&gt;  2     2017 CHARTER Charter Schools TOTAL            10669 total_enrollment FALSE    FALSE     TRUE</span></span>
-<span><span class="co">#&gt;  3     2018 CHARTER Charter Schools TOTAL            11168 total_enrollment FALSE    FALSE     TRUE</span></span>
-<span><span class="co">#&gt;  4     2019 CHARTER Charter Schools TOTAL            11565 total_enrollment FALSE    FALSE     TRUE</span></span>
-<span><span class="co">#&gt;  5     2020 CHARTER Charter Schools TOTAL            11896 total_enrollment FALSE    FALSE     TRUE</span></span>
-<span><span class="co">#&gt;  6     2021 CHARTER Charter Schools TOTAL            12225 total_enrollment FALSE    FALSE     TRUE</span></span>
-<span><span class="co">#&gt;  7     2022 CHARTER Charter Schools TOTAL            12114 total_enrollment FALSE    FALSE     TRUE</span></span>
-<span><span class="co">#&gt;  8     2023 CHARTER Charter Schools TOTAL            12128 total_enrollment FALSE    FALSE     TRUE</span></span>
-<span><span class="co">#&gt;  9     2024 CHARTER Charter Schools TOTAL            12446 total_enrollment FALSE    FALSE     TRUE</span></span>
-<span><span class="co">#&gt; 10     2025 CHARTER Charter Schools TOTAL            13094 total_enrollment FALSE    FALSE     TRUE</span></span>
+<span><span class="co">#&gt;    end_year district_id                  district_name     county_name    type grade_level         subgroup n_students pct aggregation_flag is_state is_county is_charter</span></span>
+<span><span class="co">#&gt; 1      2016          HI Hawaii Department of Education Charter Schools CHARTER       TOTAL total_enrollment      10444  NA         district    FALSE     FALSE       TRUE</span></span>
+<span><span class="co">#&gt; 2      2017          HI Hawaii Department of Education Charter Schools CHARTER       TOTAL total_enrollment      10669  NA         district    FALSE     FALSE       TRUE</span></span>
+<span><span class="co">#&gt; 3      2018          HI Hawaii Department of Education Charter Schools CHARTER       TOTAL total_enrollment      11168  NA         district    FALSE     FALSE       TRUE</span></span>
+<span><span class="co">#&gt; 4      2019          HI Hawaii Department of Education Charter Schools CHARTER       TOTAL total_enrollment      11565  NA         district    FALSE     FALSE       TRUE</span></span>
+<span><span class="co">#&gt; 5      2020          HI Hawaii Department of Education Charter Schools CHARTER       TOTAL total_enrollment      11896  NA         district    FALSE     FALSE       TRUE</span></span>
+<span><span class="co">#&gt; 6      2021          HI Hawaii Department of Education Charter Schools CHARTER       TOTAL total_enrollment      12225  NA         district    FALSE     FALSE       TRUE</span></span>
+<span><span class="co">#&gt; 7      2022          HI Hawaii Department of Education Charter Schools CHARTER       TOTAL total_enrollment      12114  NA         district    FALSE     FALSE       TRUE</span></span>
+<span><span class="co">#&gt; 8      2023          HI Hawaii Department of Education Charter Schools CHARTER       TOTAL total_enrollment      12128  NA         district    FALSE     FALSE       TRUE</span></span>
+<span><span class="co">#&gt; 9      2024          HI Hawaii Department of Education Charter Schools CHARTER       TOTAL total_enrollment      12446  NA         district    FALSE     FALSE       TRUE</span></span>
+<span><span class="co">#&gt; 10     2025          HI Hawaii Department of Education Charter Schools CHARTER       TOTAL total_enrollment      13094  NA         district    FALSE     FALSE       TRUE</span></span>
 <span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">charter_trend</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">end_year</span>, y <span class="op">=</span> <span class="va">n_students</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span>linewidth <span class="op">=</span> <span class="fl">1.5</span>, color <span class="op">=</span> <span class="st">"#2C3E50"</span><span class="op">)</span> <span class="op">+</span></span>
@@ -308,42 +268,102 @@
 <hr>
 </div>
 <div class="section level3">
-<h3 id="id_3-maui-lost-2346-students-since-2016--wildfires-compound-the-decline">3. Maui lost 2,346 students since 2016 – wildfires compound the decline<a class="anchor" aria-label="anchor" href="#id_3-maui-lost-2346-students-since-2016--wildfires-compound-the-decline"></a>
+<h3 id="id_5-kindergarten-is-shrinking-faster-than-high-school">5. Kindergarten is shrinking faster than high school<a class="anchor" aria-label="anchor" href="#id_5-kindergarten-is-shrinking-faster-than-high-school"></a>
 </h3>
-<p>Maui County has seen enrollment drop from 21,080 to 18,734 since 2016. The 2023 Lahaina wildfire added new challenges to an already declining population.</p>
+<p>Hawaii’s kindergarten enrollment dropped from ~13,900 to ~11,700 while Grade 9 grew. The pipeline of students entering the system is narrowing.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">k_trend</span> <span class="op">&lt;-</span> <span class="va">enr</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">type</span> <span class="op">==</span> <span class="st">"STATE"</span>, <span class="va">grade_level</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"K"</span>, <span class="st">"09"</span>, <span class="st">"12"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>grade_label <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case-and-replace-when.html" class="external-link">case_when</a></span><span class="op">(</span></span>
+<span>    <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"K"</span> <span class="op">~</span> <span class="st">"Kindergarten"</span>,</span>
+<span>    <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"09"</span> <span class="op">~</span> <span class="st">"Grade 9"</span>,</span>
+<span>    <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"12"</span> <span class="op">~</span> <span class="st">"Grade 12"</span></span>
+<span>  <span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">k_trend</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">k_trend</span><span class="op">)</span></span>
+<span><span class="co">#&gt;    end_year district_id                  district_name county_name  type grade_level         subgroup n_students pct aggregation_flag is_state is_county is_charter  grade_label</span></span>
+<span><span class="co">#&gt; 1      2016          HI Hawaii Department of Education State Total STATE           K total_enrollment      13933  NA            state     TRUE     FALSE      FALSE Kindergarten</span></span>
+<span><span class="co">#&gt; 2      2016          HI Hawaii Department of Education State Total STATE          09 total_enrollment      12341  NA            state     TRUE     FALSE      FALSE      Grade 9</span></span>
+<span><span class="co">#&gt; 3      2016          HI Hawaii Department of Education State Total STATE          12 total_enrollment       9625  NA            state     TRUE     FALSE      FALSE     Grade 12</span></span>
+<span><span class="co">#&gt; ...</span></span>
+<span><span class="co">#&gt; 28     2025          HI Hawaii Department of Education State Total STATE           K total_enrollment      11746  NA            state     TRUE     FALSE      FALSE Kindergarten</span></span>
+<span><span class="co">#&gt; 29     2025          HI Hawaii Department of Education State Total STATE          09 total_enrollment      14241  NA            state     TRUE     FALSE      FALSE      Grade 9</span></span>
+<span><span class="co">#&gt; 30     2025          HI Hawaii Department of Education State Total STATE          12 total_enrollment      11905  NA            state     TRUE     FALSE      FALSE     Grade 12</span></span>
+<span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">k_trend</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">end_year</span>, y <span class="op">=</span> <span class="va">n_students</span>, color <span class="op">=</span> <span class="va">grade_label</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span>linewidth <span class="op">=</span> <span class="fl">1.2</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">2.5</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_vline</a></span><span class="op">(</span>xintercept <span class="op">=</span> <span class="fl">2020.5</span>, linetype <span class="op">=</span> <span class="st">"dashed"</span>, color <span class="op">=</span> <span class="st">"red"</span>, alpha <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/annotate.html" class="external-link">annotate</a></span><span class="op">(</span><span class="st">"text"</span>, x <span class="op">=</span> <span class="fl">2020.5</span>, y <span class="op">=</span> <span class="cn">Inf</span>, label <span class="op">=</span> <span class="st">"COVID"</span>, vjust <span class="op">=</span> <span class="fl">2</span>, color <span class="op">=</span> <span class="st">"red"</span>, size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>labels <span class="op">=</span> <span class="va">comma</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Kindergarten Shrinking Faster Than High School"</span>,</span>
+<span>       subtitle <span class="op">=</span> <span class="st">"The pipeline of students is narrowing"</span>,</span>
+<span>       x <span class="op">=</span> <span class="st">"School Year"</span>, y <span class="op">=</span> <span class="st">"Students"</span>, color <span class="op">=</span> <span class="st">""</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span>base_size <span class="op">=</span> <span class="fl">14</span><span class="op">)</span></span></code></pre></div>
+<div class="float">
+<img src="https://almartin82.github.io/hischooldata/articles/enrollment-trends_files/figure-html/k-vs-12-1.png" alt="Kindergarten Shrinking Faster Than High School"><div class="figcaption">Kindergarten Shrinking Faster Than High School</div>
+</div>
+<hr>
+</div>
+<div class="section level3">
+<h3 id="id_11-honolulu-lost-14170-students-while-neighbor-islands-lost-only-3399">11. Honolulu lost 14,170 students while neighbor islands lost only 3,399<a class="anchor" aria-label="anchor" href="#id_11-honolulu-lost-14170-students-while-neighbor-islands-lost-only-3399"></a>
+</h3>
+<p>Honolulu County (Oahu) has about two-thirds of all students, but neighbor island counties have maintained enrollment more effectively during the statewide decline.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">maui_trend</span> <span class="op">&lt;-</span> <span class="va">enr</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span>, <span class="va">county_name</span> <span class="op">==</span> <span class="st">"Maui"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">island_comparison</span> <span class="op">&lt;-</span> <span class="va">enr</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span>, <span class="va">type</span> <span class="op">==</span> <span class="st">"COUNTY"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>island_group <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">county_name</span> <span class="op">==</span> <span class="st">"Honolulu"</span>, <span class="st">"Honolulu (Oahu)"</span>, <span class="st">"Neighbor Islands"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">end_year</span>, <span class="va">island_group</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>n_students <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">n_students</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, .groups <span class="op">=</span> <span class="st">"drop"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">maui_trend</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">maui_trend</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">island_comparison</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">island_comparison</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 20 x 3</span></span>
+<span><span class="co">#&gt;    end_year island_group     n_students</span></span>
+<span><span class="co">#&gt;       &lt;dbl&gt; &lt;chr&gt;                 &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt;  1     2016 Honolulu (Oahu)      118155</span></span>
+<span><span class="co">#&gt;  2     2016 Neighbor Islands      53396</span></span>
+<span><span class="co">#&gt;  3     2017 Honolulu (Oahu)      117203</span></span>
+<span><span class="co">#&gt;  4     2017 Neighbor Islands      53678</span></span>
+<span><span class="co">#&gt;  5     2018 Honolulu (Oahu)      115691</span></span>
+<span><span class="co">#&gt;  6     2018 Neighbor Islands      53978</span></span>
+<span><span class="co">#&gt;  7     2019 Honolulu (Oahu)      115600</span></span>
+<span><span class="co">#&gt;  8     2019 Neighbor Islands      54113</span></span>
+<span><span class="co">#&gt;  9     2020 Honolulu (Oahu)      114980</span></span>
+<span><span class="co">#&gt; 10     2020 Neighbor Islands      54212</span></span>
+<span><span class="co">#&gt; 11     2021 Honolulu (Oahu)      111166</span></span>
+<span><span class="co">#&gt; 12     2021 Neighbor Islands      53050</span></span>
+<span><span class="co">#&gt; 13     2022 Honolulu (Oahu)      108770</span></span>
+<span><span class="co">#&gt; 14     2022 Neighbor Islands      52294</span></span>
+<span><span class="co">#&gt; 15     2023 Honolulu (Oahu)      106515</span></span>
+<span><span class="co">#&gt; 16     2023 Neighbor Islands      51566</span></span>
+<span><span class="co">#&gt; 17     2024 Honolulu (Oahu)      105712</span></span>
+<span><span class="co">#&gt; 18     2024 Neighbor Islands      51150</span></span>
+<span><span class="co">#&gt; 19     2025 Honolulu (Oahu)      103985</span></span>
+<span><span class="co">#&gt; 20     2025 Neighbor Islands      49997</span></span>
 <span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">maui_trend</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">end_year</span>, y <span class="op">=</span> <span class="va">n_students</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span>linewidth <span class="op">=</span> <span class="fl">1.5</span>, color <span class="op">=</span> <span class="st">"#9B59B6"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">3</span>, color <span class="op">=</span> <span class="st">"#9B59B6"</span><span class="op">)</span> <span class="op">+</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">island_comparison</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">end_year</span>, y <span class="op">=</span> <span class="va">n_students</span>, color <span class="op">=</span> <span class="va">island_group</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span>linewidth <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_vline</a></span><span class="op">(</span>xintercept <span class="op">=</span> <span class="fl">2020.5</span>, linetype <span class="op">=</span> <span class="st">"dashed"</span>, color <span class="op">=</span> <span class="st">"red"</span>, alpha <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/annotate.html" class="external-link">annotate</a></span><span class="op">(</span><span class="st">"text"</span>, x <span class="op">=</span> <span class="fl">2020.5</span>, y <span class="op">=</span> <span class="cn">Inf</span>, label <span class="op">=</span> <span class="st">"COVID"</span>, vjust <span class="op">=</span> <span class="fl">2</span>, color <span class="op">=</span> <span class="st">"red"</span>, size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>labels <span class="op">=</span> <span class="va">comma</span>, limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="cn">NA</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Maui County Enrollment"</span>,</span>
-<span>       subtitle <span class="op">=</span> <span class="st">"Tourism economy and wildfire impacts affect enrollment"</span>,</span>
-<span>       x <span class="op">=</span> <span class="st">"School Year"</span>, y <span class="op">=</span> <span class="st">"Students"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Honolulu (Oahu)"</span> <span class="op">=</span> <span class="st">"#2C3E50"</span>, <span class="st">"Neighbor Islands"</span> <span class="op">=</span> <span class="st">"#1ABC9C"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Honolulu vs Neighbor Islands"</span>,</span>
+<span>       subtitle <span class="op">=</span> <span class="st">"Oahu dominates but faces steeper decline"</span>,</span>
+<span>       x <span class="op">=</span> <span class="st">"School Year"</span>, y <span class="op">=</span> <span class="st">"Students"</span>, color <span class="op">=</span> <span class="st">""</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span>base_size <span class="op">=</span> <span class="fl">14</span><span class="op">)</span></span></code></pre></div>
 <div class="float">
-<img src="https://almartin82.github.io/hischooldata/articles/enrollment-trends_files/figure-html/maui-n_students-1.png" alt="Maui County Enrollment"><div class="figcaption">Maui County Enrollment</div>
+<img src="https://almartin82.github.io/hischooldata/articles/enrollment-trends_files/figure-html/honolulu-vs-neighbor-1.png" alt="Honolulu vs Neighbor Islands"><div class="figcaption">Honolulu vs Neighbor Islands</div>
 </div>
+<hr>
 </div>
 </div>
 <div class="section level2">
 <h2 id="explore-more">Explore More<a class="anchor" aria-label="anchor" href="#explore-more"></a>
 </h2>
-<p>Full analysis with 15+ stories:</p>
-<ul>
-<li>
-<a href="https://almartin82.github.io/hischooldata/articles/enrollment-trends.html">Hawaii enrollment trends</a> – 15 stories covering county breakdowns, grade-level shifts, COVID impact, and more</li>
-<li>
-<a href="https://almartin82.github.io/hischooldata/articles/hischooldata.html">Getting started with hischooldata</a> – installation, data structure, and basic usage</li>
-<li><a href="https://almartin82.github.io/hischooldata/reference/">Function reference</a></li>
-</ul>
+<p>Full analysis with 15 stories: - <a href="https://almartin82.github.io/hischooldata/articles/enrollment-trends.html">Hawaii Enrollment Trends</a> – 15 stories - <a href="https://almartin82.github.io/hischooldata/articles/hischooldata.html">Getting started with hischooldata</a> - <a href="https://almartin82.github.io/hischooldata/reference/">Function reference</a></p>
 </div>
 <div class="section level2">
 <h2 id="data-notes">Data Notes<a class="anchor" aria-label="anchor" href="#data-notes"></a>
@@ -398,54 +418,6 @@
 <li>Charter school reporting changed over time</li>
 </ul>
 </div>
-</div>
-<div class="section level2">
-<h2 id="data-availability">Data Availability<a class="anchor" aria-label="anchor" href="#data-availability"></a>
-</h2>
-<table class="table">
-<colgroup>
-<col width="17%">
-<col width="19%">
-<col width="46%">
-<col width="17%">
-</colgroup>
-<thead><tr class="header">
-<th>Years</th>
-<th>Source</th>
-<th>Aggregation Levels</th>
-<th>Notes</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td><strong>2018-2025</strong></td>
-<td>HIDOE Official Enrollment</td>
-<td>State, County, Charter</td>
-<td>Modern Excel format</td>
-</tr>
-<tr class="even">
-<td><strong>2011-2017</strong></td>
-<td>DBEDT State Data Book</td>
-<td>State, County</td>
-<td>Aggregate data from Data Book</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section level2">
-<h2 id="part-of-the-state-schooldata-project">Part of the State Schooldata Project<a class="anchor" aria-label="anchor" href="#part-of-the-state-schooldata-project"></a>
-</h2>
-<p>A simple, consistent interface for accessing state-published school data in Python and R. This package is part of the <a href="https://github.com/almartin82/njschooldata" class="external-link">State Schooldata Project</a>, which started with <a href="https://github.com/almartin82/njschooldata" class="external-link">njschooldata</a> for New Jersey.</p>
-<p><strong>All 50 state packages:</strong> <a href="https://github.com/almartin82?tab=repositories&amp;q=schooldata" class="external-link">github.com/almartin82</a></p>
-</div>
-<div class="section level2">
-<h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a>
-</h2>
-<p><a href="https://github.com/almartin82" class="external-link">Andy Martin</a> (<a href="mailto:almartin@gmail.com" class="email">almartin@gmail.com</a>)</p>
-</div>
-<div class="section level2">
-<h2 id="license">License<a class="anchor" aria-label="anchor" href="#license"></a>
-</h2>
-<p>MIT</p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
