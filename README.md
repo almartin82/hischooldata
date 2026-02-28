@@ -26,7 +26,7 @@ Part of the [njschooldata](https://github.com/almartin82/njschooldata) family.
 | EL Progress | -- | -- | -- |
 | Special Ed | -- | -- | -- |
 
-> See the full [data category taxonomy](https://github.com/almartin82/state-schooldata/blob/main/docs/DATA-CATEGORY-TAXONOMY.md) for all 30 categories tracked across the state schooldata project.
+> See [DATA-CATEGORY-TAXONOMY.md](DATA-CATEGORY-TAXONOMY.md) for what each category covers.
 
 ## Installation
 
