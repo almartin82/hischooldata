@@ -7,7 +7,10 @@ can track what’s happening across all four counties and charter schools
 with a single function call.
 
 Part of the [njschooldata](https://github.com/almartin82/njschooldata)
-family. **[Docs](https://almartin82.github.io/hischooldata/)**
+family. **[Full
+documentation](https://almartin82.github.io/hischooldata/)** — all 15
+stories with interactive charts, getting-started guide, and complete
+function reference.
 
 ## Data Taxonomy
 
