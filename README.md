@@ -10,7 +10,7 @@
 Hawaii is America's only statewide school district -- one state, one system, no local school boards. This package fetches 15 years of enrollment data directly from the Hawaii Department of Education so you can track what's happening across all four counties and charter schools with a single function call.
 
 Part of the [njschooldata](https://github.com/almartin82/njschooldata) family.
-**[Docs](https://almartin82.github.io/hischooldata/)**
+**[Full documentation](https://almartin82.github.io/hischooldata/)** — all 15 stories with interactive charts, getting-started guide, and complete function reference.
 
 ## Data Taxonomy
 
