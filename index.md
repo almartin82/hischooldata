@@ -68,6 +68,8 @@ Enrollment](https://almartin82.github.io/hischooldata/articles/enrollment-trends
 
 Charter School Enrollment
 
+[(source)](https://almartin82.github.io/hischooldata/articles/enrollment-trends.html#charter-schools-grew-25-since-2016)
+
 ------------------------------------------------------------------------
 
 ### 2. Kindergarten is shrinking faster than high school
@@ -101,6 +103,8 @@ School](https://almartin82.github.io/hischooldata/articles/enrollment-trends_fil
 
 Kindergarten Shrinking Faster Than High School
 
+[(source)](https://almartin82.github.io/hischooldata/articles/enrollment-trends.html#kindergarten-is-shrinking-faster-than-high-school)
+
 ------------------------------------------------------------------------
 
 ### 3. Maui lost 2,346 students since 2016 – wildfires compound the decline
@@ -132,6 +136,8 @@ print(maui_trend)
 Enrollment](https://almartin82.github.io/hischooldata/articles/enrollment-trends_files/figure-html/maui-n_students-1.png)
 
 Maui County Enrollment
+
+[(source)](https://almartin82.github.io/hischooldata/articles/enrollment-trends.html#maui-lost-2346-students-since-2016----wildfires-compound-the-decline)
 
 ------------------------------------------------------------------------
 
@@ -318,6 +324,8 @@ Enrollment](https://almartin82.github.io/hischooldata/articles/enrollment-trends
 
 Hawaii Public School Enrollment
 
+[(source)](https://almartin82.github.io/hischooldata/articles/enrollment-trends.html#enrollment-dropped-15000-students-since-2016)
+
 ------------------------------------------------------------------------
 
 ### 6. Enrollment by County
@@ -345,6 +353,8 @@ print(county_enr)
 County](https://almartin82.github.io/hischooldata/articles/enrollment-trends_files/figure-html/county-distribution-1.png)
 
 Hawaii Enrollment by County
+
+[(source)](https://almartin82.github.io/hischooldata/articles/enrollment-trends.html#enrollment-by-county)
 
 ------------------------------------------------------------------------
 
@@ -453,6 +463,8 @@ County](https://almartin82.github.io/hischooldata/articles/enrollment-trends_fil
 
 Enrollment by County
 
+[(source)](https://almartin82.github.io/hischooldata/articles/enrollment-trends.html#county-trends-over-time)
+
 ------------------------------------------------------------------------
 
 ### 10. Special education enrollment
@@ -513,6 +525,8 @@ Level](https://almartin82.github.io/hischooldata/articles/enrollment-trends_file
 
 Enrollment by Grade Level
 
+[(source)](https://almartin82.github.io/hischooldata/articles/enrollment-trends.html#grade-level-distribution)
+
 ------------------------------------------------------------------------
 
 ### 12. Honolulu lost 14,170 students while neighbor islands lost only 3,399
@@ -560,6 +574,8 @@ Islands](https://almartin82.github.io/hischooldata/articles/enrollment-trends_fi
 
 Honolulu vs Neighbor Islands
 
+[(source)](https://almartin82.github.io/hischooldata/articles/enrollment-trends.html#honolulu-lost-14170-students-while-neighbor-islands-lost-only-3399)
+
 ------------------------------------------------------------------------
 
 ### 13. Elementary schools losing students faster than high schools
@@ -602,6 +618,8 @@ Level](https://almartin82.github.io/hischooldata/articles/enrollment-trends_file
 
 Enrollment by School Level
 
+[(source)](https://almartin82.github.io/hischooldata/articles/enrollment-trends.html#elementary-schools-losing-students-faster-than-high-schools)
+
 ------------------------------------------------------------------------
 
 ### 14. Pre-K enrollment holds steady around 1,600
@@ -633,6 +651,8 @@ Enrollment](https://almartin82.github.io/hischooldata/articles/enrollment-trends
 
 Pre-Kindergarten Enrollment
 
+[(source)](https://almartin82.github.io/hischooldata/articles/enrollment-trends.html#pre-k-enrollment-holds-steady-around-1600)
+
 ------------------------------------------------------------------------
 
 ### 15. Big Island holds largest neighbor island enrollment
@@ -658,5 +678,7 @@ print(neighbor_comparison)
 Enrollment](https://almartin82.github.io/hischooldata/articles/enrollment-trends_files/figure-html/big-island-n_students-1.png)
 
 Neighbor Island Enrollment
+
+[(source)](https://almartin82.github.io/hischooldata/articles/enrollment-trends.html#big-island-holds-largest-neighbor-island-enrollment)
 
 ------------------------------------------------------------------------
