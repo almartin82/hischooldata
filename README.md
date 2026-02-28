@@ -64,6 +64,8 @@ print(charter_trend)
 
 ![Charter School Enrollment](https://almartin82.github.io/hischooldata/articles/enrollment-trends_files/figure-html/charter-growth-1.png)
 
+[(source)](https://almartin82.github.io/hischooldata/articles/enrollment-trends.html#charter-schools-grew-25-since-2016)
+
 ---
 
 ### 2. Kindergarten is shrinking faster than high school
@@ -93,6 +95,8 @@ print(k_trend)
 
 ![Kindergarten Shrinking Faster Than High School](https://almartin82.github.io/hischooldata/articles/enrollment-trends_files/figure-html/k-vs-12-1.png)
 
+[(source)](https://almartin82.github.io/hischooldata/articles/enrollment-trends.html#kindergarten-is-shrinking-faster-than-high-school)
+
 ---
 
 ### 3. Maui lost 2,346 students since 2016 -- wildfires compound the decline
@@ -119,6 +123,8 @@ print(maui_trend)
 ```
 
 ![Maui County Enrollment](https://almartin82.github.io/hischooldata/articles/enrollment-trends_files/figure-html/maui-n_students-1.png)
+
+[(source)](https://almartin82.github.io/hischooldata/articles/enrollment-trends.html#maui-lost-2346-students-since-2016----wildfires-compound-the-decline)
 
 ---
 
@@ -289,6 +295,8 @@ print(state_trend)
 
 ![Hawaii Public School Enrollment](https://almartin82.github.io/hischooldata/articles/enrollment-trends_files/figure-html/n_students-decline-1.png)
 
+[(source)](https://almartin82.github.io/hischooldata/articles/enrollment-trends.html#enrollment-dropped-15000-students-since-2016)
+
 ---
 
 ### 6. Enrollment by County
@@ -311,6 +319,8 @@ print(county_enr)
 ```
 
 ![Hawaii Enrollment by County](https://almartin82.github.io/hischooldata/articles/enrollment-trends_files/figure-html/county-distribution-1.png)
+
+[(source)](https://almartin82.github.io/hischooldata/articles/enrollment-trends.html#enrollment-by-county)
 
 ---
 
@@ -411,6 +421,8 @@ print(county_trend)
 
 ![Enrollment by County](https://almartin82.github.io/hischooldata/articles/enrollment-trends_files/figure-html/county-trends-1.png)
 
+[(source)](https://almartin82.github.io/hischooldata/articles/enrollment-trends.html#county-trends-over-time)
+
 ---
 
 ### 10. Special education enrollment
@@ -465,6 +477,8 @@ print(grade_dist)
 
 ![Enrollment by Grade Level](https://almartin82.github.io/hischooldata/articles/enrollment-trends_files/figure-html/grade-distribution-1.png)
 
+[(source)](https://almartin82.github.io/hischooldata/articles/enrollment-trends.html#grade-level-distribution)
+
 ---
 
 ### 12. Honolulu lost 14,170 students while neighbor islands lost only 3,399
@@ -507,6 +521,8 @@ print(island_comparison)
 
 ![Honolulu vs Neighbor Islands](https://almartin82.github.io/hischooldata/articles/enrollment-trends_files/figure-html/honolulu-vs-neighbor-1.png)
 
+[(source)](https://almartin82.github.io/hischooldata/articles/enrollment-trends.html#honolulu-lost-14170-students-while-neighbor-islands-lost-only-3399)
+
 ---
 
 ### 13. Elementary schools losing students faster than high schools
@@ -544,6 +560,8 @@ print(level_comparison)
 
 ![Enrollment by School Level](https://almartin82.github.io/hischooldata/articles/enrollment-trends_files/figure-html/elementary-vs-secondary-1.png)
 
+[(source)](https://almartin82.github.io/hischooldata/articles/enrollment-trends.html#elementary-schools-losing-students-faster-than-high-schools)
+
 ---
 
 ### 14. Pre-K enrollment holds steady around 1,600
@@ -571,6 +589,8 @@ print(prek_trend)
 
 ![Pre-Kindergarten Enrollment](https://almartin82.github.io/hischooldata/articles/enrollment-trends_files/figure-html/prek-trends-1.png)
 
+[(source)](https://almartin82.github.io/hischooldata/articles/enrollment-trends.html#pre-k-enrollment-holds-steady-around-1600)
+
 ---
 
 ### 15. Big Island holds largest neighbor island enrollment
@@ -591,5 +611,7 @@ print(neighbor_comparison)
 ```
 
 ![Neighbor Island Enrollment](https://almartin82.github.io/hischooldata/articles/enrollment-trends_files/figure-html/big-island-n_students-1.png)
+
+[(source)](https://almartin82.github.io/hischooldata/articles/enrollment-trends.html#big-island-holds-largest-neighbor-island-enrollment)
 
 ---
